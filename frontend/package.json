@@ -1,0 +1,22 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx tailwindcss -i ./src/index.css -o ./public/index.css",
+    "build:ts": "tsc",
+    "build:static": "cpy static/* public",
+    "build:public": "cpy public/* ../public",
+    "build": "npm run build:css && npm run build:ts && npm run build:static && npm run build:public"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
+    "cpy-cli": "^4.2.0",
+    "tailwindcss": "^3.2.7",
+    "typescript": "^4.9.5"
+  }
+}
