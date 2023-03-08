@@ -340,10 +340,8 @@ const studentInfo = getStudentInfo();
 if (studentInfo === undefined) {
   document.getElementById("studentInfo")!.classList.remove("hidden");
 } else {
-  document.getElementById("resetButton")!.classList.remove("hidden");
-  document.getElementById("routine")!.classList.remove("hidden");
-  document.getElementById("legends")!.classList.remove("hidden");
-  document.getElementById("legends")!.classList.add("grid");
+  for (const id of ["resetButton", "routine", "legends"])
+    document.getElementById(id)!.classList.remove("hidden");
 
   function toMandatory(code: Elective1 | Elective2) {
     const className = `EEE ${code.slice(-4)}`;

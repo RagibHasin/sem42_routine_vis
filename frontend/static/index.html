@@ -5,41 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <script>
-      const stripes = `
-var(--tw-gradient-from) 0.25rem,
-var(--tw-gradient-to)   0.25rem 0.5rem,
-var(--tw-gradient-from) 0.5rem 0.75rem,
-var(--tw-gradient-to)   0.75rem 1rem,
-var(--tw-gradient-from) 1rem 1.25rem,
-var(--tw-gradient-to)   1.25rem`;
-
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            // screens: {
-            //   md: "896px",
-            //   lg: "1152px",
-            // },
-            boxShadow: {
-              "inset-sm-s": "inset 0 0 0.5rem 0.25rem #0004",
-            },
-            backgroundImage: {
-              "diag-stripe-bl": `linear-gradient(45deg, ${stripes})`,
-              "diag-stripe-br": `linear-gradient(-45deg, ${stripes})`,
-            },
-          },
-          fontFamily: {
-            serif: ["Source Serif Pro", "serif"],
-          },
-        },
-      };
-    </script>
-    <style type="text/tailwindcss"></style>
-
-    <!-- <link href="index.css" rel="stylesheet" /> -->
+    <link href="index.css" rel="stylesheet" />
     <script>
       var onThemeButtonLoad = null;
 
@@ -75,203 +41,201 @@ var(--tw-gradient-to)   1.25rem`;
   </head>
 
   <body
-    class="select-none font-serif text-lg dark:bg-stone-900 dark:text-white"
+    class="grid h-screen w-full min-w-max select-none grid-rows-[6rem_1fr_6rem] px-4 font-serif text-lg dark:bg-stone-900 dark:text-white print:px-24 lg:px-24"
     onload="onThemeButtonLoad()"
   >
-    <div
-      class="grid h-screen w-screen grid-rows-[6rem_1fr_6rem] px-4 print:px-24 lg:px-24"
-    >
-      <header class="row-start-1 my-auto p-4 text-center">
-        <div class="text-4xl font-light">Semester 4-1 Routine Visualizer</div>
-        <div class="text-lg">
-          for students of 18 series of RUET EEE only (for now, atleast)
-        </div>
-      </header>
-
-      <form
-        id="studentInfo"
-        class="row-start-2 m-auto hidden w-full lg:w-2/5"
-        action="javascript:void(0);"
-        onsubmit="setRoutineCookie()"
-      >
-        <label class="p-4">
-          Roll:
-          <input
-            id="roll"
-            class="w-full rounded border border-stone-300 dark:border-stone-600 dark:bg-stone-900"
-            type="text"
-            name="roll"
-            minlength="7"
-            maxlength="7"
-            pattern="1801[01]\d{2}"
-          />
-        </label>
-        <fieldset
-          id="elective1"
-          class="rounded border border-stone-300 p-4 dark:border-stone-600"
-        >
-          <legend>Elective 1:</legend>
-          <label>
-            <input type="radio" name="elective1" value="eee4141" checked />
-            EEE 4141: Power System II
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="elective1" value="eee4165" />
-            EEE 4165: Processing and Fabrication Technology
-          </label>
-        </fieldset>
-        <br />
-        <fieldset
-          id="elective2"
-          class="rounded border border-stone-300 p-4 dark:border-stone-600"
-        >
-          <legend>Elective 2:</legend>
-          <label>
-            <input type="radio" name="elective2" value="eee4143" checked />
-            EEE 4143: High Voltage Engineering
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="elective2" value="eee4163" />
-            EEE 4163: VLSI
-          </label>
-          <br />
-          <label>
-            <input type="radio" name="elective2" value="eee4183" />
-            EEE 4183: Digital Communication
-          </label>
-        </fieldset>
-        <br />
-        <button
-          class="w-full rounded border border-stone-300 p-2 hover:ring-2 hover:ring-blue-600 dark:border-stone-600"
-          onclick="setRoutineCookie()"
-        >
-          Get to the routine already
-        </button>
-      </form>
-
-      <table
-        id="routine"
-        class="row-start-2 hidden min-w-max table-fixed border-separate rounded border border-stone-300 text-center dark:border-stone-600"
-      >
-        <thead class="text-semibold text-base">
-          <tr>
-            <th class="w-25"></th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              8:00 - 8:50
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              8:50 - 9:40
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              9:40 - 10:30
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              10:50 - 11:40
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              11:40 - 12:30
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              12:30 - 1:20
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              2:30 - 3:20
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              3:20 - 4:10
-            </th>
-            <th class="border border-stone-300 px-1 dark:border-stone-600">
-              4:10 - 5:00
-            </th>
-          </tr>
-        </thead>
-        <tbody id="routineBody">
-          <tr id="dayA">
-            <td
-              class="border border-stone-300 px-1 text-right dark:border-stone-600"
-            >
-              Saturday
-            </td>
-          </tr>
-          <tr id="dayB">
-            <td
-              class="border border-stone-300 px-1 text-right dark:border-stone-600"
-            >
-              Sunday
-            </td>
-          </tr>
-          <tr id="dayC">
-            <td
-              class="border border-stone-300 px-1 text-right dark:border-stone-600"
-            >
-              Monday
-            </td>
-          </tr>
-          <tr id="dayD">
-            <td
-              class="border border-stone-300 px-1 text-right dark:border-stone-600"
-            >
-              Tuesday
-            </td>
-          </tr>
-          <tr id="dayE">
-            <td
-              class="border border-stone-300 px-1 text-right dark:border-stone-600"
-            >
-              Wednesday
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div
-        id="legends"
-        class="col-start-1 row-start-3 mb-auto hidden grid-cols-5 pt-2 text-sm"
-      >
-        <div
-          class="col-start-2 rounded border border-stone-300 bg-diag-stripe-br from-amber-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-amber-700"
-        >
-          Odd cycles only
-        </div>
-        <div
-          class="col-start-4 rounded border border-stone-300 bg-diag-stripe-bl from-emerald-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-emerald-700"
-        >
-          Even cycles only
-        </div>
+    <header class="relative row-start-1 my-auto py-4 text-center">
+      <div class="text-4xl font-light">Semester 4-1 Routine Visualizer</div>
+      <div class="text-lg">
+        for students of 18 series of RUET EEE only (for now, atleast)
       </div>
 
-      <footer
-        class="col-start-1 row-start-3 mt-auto pb-4 text-center text-base font-light"
+      <div
+        class="absolute top-4 right-0 space-x-2 text-sm print:hidden lg:-right-20"
       >
-        Made with utter contempt and disgust by
-        <a
-          class="text-sky-500 dark:text-sky-400"
-          href="https://github.com/RagibHasin"
+        <button
+          id="resetButton"
+          class="hidden aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+          onclick="resetStudentInfo()"
+          title="Reset data"
         >
-          Muhammad Ragib Hasin</a
-        >. 😬🤢😫😑
-      </footer>
+          🔃
+        </button>
+        <button
+          id="themeButton"
+          class="aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+          onclick="toggleTheme()"
+          ondblclick="resetTheme()"
+          title="Toggle theme"
+        ></button>
+      </div>
+    </header>
+
+    <form
+      id="studentInfo"
+      class="row-start-2 m-auto hidden w-max"
+      action="javascript:void(0);"
+      onsubmit="setRoutineCookie()"
+    >
+      <label class="p-4">
+        Roll:
+        <input
+          id="roll"
+          class="w-full rounded border border-stone-300 dark:border-stone-600 dark:bg-stone-900"
+          type="text"
+          name="roll"
+          minlength="7"
+          maxlength="7"
+          pattern="1801[01]\d{2}"
+        />
+      </label>
+      <fieldset
+        id="elective1"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 1:</legend>
+        <label>
+          <input type="radio" name="elective1" value="eee4141" checked />
+          EEE 4141: Power System II
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="elective1" value="eee4165" />
+          EEE 4165: Processing and Fabrication Technology
+        </label>
+      </fieldset>
+      <br />
+      <fieldset
+        id="elective2"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 2:</legend>
+        <label>
+          <input type="radio" name="elective2" value="eee4143" checked />
+          EEE 4143: High Voltage Engineering
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="elective2" value="eee4163" />
+          EEE 4163: VLSI
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="elective2" value="eee4183" />
+          EEE 4183: Digital Communication
+        </label>
+      </fieldset>
+      <br />
+      <button
+        class="w-full rounded border border-stone-300 p-2 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+        onclick="setRoutineCookie()"
+      >
+        Get to the routine already
+      </button>
+    </form>
+
+    <table
+      id="routine"
+      class="row-start-2 hidden min-w-max table-fixed border-separate rounded border border-stone-300 text-center dark:border-stone-600"
+    >
+      <thead class="text-semibold text-base">
+        <tr>
+          <th class="w-25"></th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            8:00 - 8:50
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            8:50 - 9:40
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            9:40 - 10:30
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            10:50 - 11:40
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            11:40 - 12:30
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            12:30 - 1:20
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            2:30 - 3:20
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            3:20 - 4:10
+          </th>
+          <th class="border border-stone-300 px-1 dark:border-stone-600">
+            4:10 - 5:00
+          </th>
+        </tr>
+      </thead>
+      <tbody id="routineBody">
+        <tr id="dayA">
+          <td
+            class="border border-stone-300 px-1 text-right dark:border-stone-600"
+          >
+            Saturday
+          </td>
+        </tr>
+        <tr id="dayB">
+          <td
+            class="border border-stone-300 px-1 text-right dark:border-stone-600"
+          >
+            Sunday
+          </td>
+        </tr>
+        <tr id="dayC">
+          <td
+            class="border border-stone-300 px-1 text-right dark:border-stone-600"
+          >
+            Monday
+          </td>
+        </tr>
+        <tr id="dayD">
+          <td
+            class="border border-stone-300 px-1 text-right dark:border-stone-600"
+          >
+            Tuesday
+          </td>
+        </tr>
+        <tr id="dayE">
+          <td
+            class="border border-stone-300 px-1 text-right dark:border-stone-600"
+          >
+            Wednesday
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      id="legends"
+      class="col-start-1 row-start-3 mb-auto grid hidden grid-cols-5 pt-2 text-sm"
+    >
+      <div
+        class="col-start-2 rounded border border-stone-300 bg-diag-stripe-br from-amber-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-amber-700"
+      >
+        Odd cycles only
+      </div>
+      <div
+        class="col-start-4 rounded border border-stone-300 bg-diag-stripe-bl from-emerald-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-emerald-700"
+      >
+        Even cycles only
+      </div>
     </div>
 
-    <div class="fixed top-2 right-2 text-sm print:hidden">
-      <button
-        id="resetButton"
-        class="m-2 aspect-square rounded-full border p-2 hover:ring-2 hover:ring-blue-600"
-        onclick="resetStudentInfo()"
-        title="Reset data"
+    <footer
+      class="col-start-1 row-start-3 mt-auto pb-4 text-center text-base font-light"
+    >
+      Made with utter contempt and disgust by
+      <a
+        class="text-sky-500 dark:text-sky-400"
+        href="https://github.com/RagibHasin"
       >
-        🔃
-      </button>
-      <button
-        id="themeButton"
-        class="m-2 aspect-square rounded-full border p-2 hover:ring-2 hover:ring-blue-600"
-        onclick="toggleTheme()"
-        ondblclick="resetTheme()"
-        title="Toggle theme"
-      ></button>
-    </div>
+        Muhammad Ragib Hasin</a
+      >. 😬🤢😫😑
+    </footer>
 
     <script src="index.js"></script>
   </body>
