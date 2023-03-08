@@ -338,10 +338,12 @@ const electiveClasses: Record<Elective1 | Elective2, ElectiveClass[][]> = {
 const studentInfo = getStudentInfo();
 
 if (studentInfo === undefined) {
-  document.getElementById("data_div")!.classList.remove("hidden");
+  document.getElementById("studentInfo")!.classList.remove("hidden");
 } else {
   document.getElementById("resetButton")!.classList.remove("hidden");
   document.getElementById("routine")!.classList.remove("hidden");
+  document.getElementById("legends")!.classList.remove("hidden");
+  document.getElementById("legends")!.classList.add("grid");
 
   function toMandatory(code: Elective1 | Elective2) {
     const className = `EEE ${code.slice(-4)}`;
@@ -381,7 +383,7 @@ if (studentInfo === undefined) {
 
   function insertCell(dayRow: HTMLTableRowElement) {
     const cell = dayRow.insertCell();
-    cell.className = "border border-stone-300 dark:border-stone-600";
+    cell.className = "border border-stone-300 dark:border-stone-600 px-1";
     return cell;
   }
 
@@ -408,10 +410,14 @@ if (studentInfo === undefined) {
       if (contactHours !== 1) cell.colSpan = contactHours;
       if (cycle !== undefined)
         cell.classList.add(
-          ...["shadow-[inset_0_0_1em_0_rgb(0,0,0,0.25)]"].concat(
+          ...["to-transparent"].concat(
             cycle === "odd"
-              ? ["shadow-amber-200", "dark:shadow-amber-900"]
-              : ["shadow-emerald-200", "dark:shadow-emerald-900"]
+              ? ["bg-diag-stripe-br", "from-amber-400", "dark:from-amber-700"]
+              : [
+                  "bg-diag-stripe-bl",
+                  "from-emerald-400",
+                  "dark:from-emerald-700",
+                ]
           )
         );
 
@@ -437,3 +443,17 @@ function resetTheme() {
   localStorage.removeItem("darkTheme");
   updateTheme();
 }
+
+let printThemeBackup: string | undefined;
+
+window.onbeforeprint = (e) => {
+  printThemeBackup = localStorage.darkTheme;
+  localStorage.darkTheme = "false";
+  updateTheme();
+};
+
+window.onafterprint = (e) => {
+  localStorage.darkTheme = printThemeBackup;
+  printThemeBackup = undefined;
+  updateTheme();
+};
