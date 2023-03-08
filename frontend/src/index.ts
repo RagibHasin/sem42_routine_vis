@@ -2,7 +2,7 @@
  * All rights reserved (C) 2023 Muhammad Ragib Hasin
  */
 
-type Elective1 = "eee4145" | "eee4165";
+type Elective1 = "eee4141" | "eee4165";
 
 type Elective2 = "eee4143" | "eee4163" | "eee4183";
 
@@ -26,6 +26,7 @@ type ElectiveClass = {
   instructor: string;
   room: string;
   period: number;
+  duration?: number;
   for?: [number, number];
   cycle?: Cycle;
 };
@@ -105,8 +106,8 @@ function isSessional(klass: ElectiveClass) {
   return klass.room.length !== 3;
 }
 
-function classSpan(klass: ElectiveClass) {
-  return isSessional(klass) ? 3 : 1;
+function classDuration(klass: ElectiveClass) {
+  return klass.duration ?? (isSessional(klass) ? 3 : 1);
 }
 
 const mandatoryClasses: Record<Section, MandatoryClass[][]> = {
@@ -249,29 +250,50 @@ const mandatoryClasses: Record<Section, MandatoryClass[][]> = {
 };
 
 const electiveClasses: Record<Elective1 | Elective2, ElectiveClass[][]> = {
+  eee4141: [
+    // Sat
+    [
+      { instructor: "RAR", room: "402", period: 8, duration: 2, for: [1, 82] },
+      { instructor: "ABM", room: "302", period: 8, for: [83, 180] },
+    ],
+    // Sun
+    [],
+    // Mon
+    [{ instructor: "ABM", room: "102", period: 8, for: [83, 180] }],
+    // Tue
+    [
+      { instructor: "RAR", room: "101", period: 7, for: [1, 82] },
+      { instructor: "ABM", room: "102", period: 7, for: [83, 180] },
+    ],
+    // Wed
+    [
+      {
+        instructor: "RAR",
+        room: "IoT Lab",
+        period: 7,
+        for: [1, 82],
+        cycle: "odd",
+      },
+      {
+        instructor: "MMI",
+        room: "Computer Lab 2",
+        period: 7,
+        for: [83, 180],
+        cycle: "odd",
+      },
+    ],
+  ],
   eee4143: [
     // Sat
-    [{ instructor: "SMH", room: "403", period: 7, for: [61, 180] }],
+    [{ instructor: "SMR", room: "302", period: 7 }],
     // Sun
-    [{ instructor: "SMH", room: "Computer Lab 1", period: 1 }],
+    [{ instructor: "MMI", room: "Green Energy Lab", period: 1, cycle: "even" }],
     // Mon
-    [{ instructor: "SMH", room: "102", period: 7 }],
+    [{ instructor: "MNA", room: "402", period: 7 }],
     // Tue
-    [{ instructor: "SMH", room: "102", period: 8 }],
+    [{ instructor: "SMR / MNA", room: "301", period: 8 }],
     // Wed
     [],
-  ],
-  eee4145: [
-    // Sat
-    [{ instructor: "MFH / SK", room: "403", period: 8 }],
-    // Sun
-    [],
-    // Mon
-    [{ instructor: "MFH", room: "402", period: 8 }],
-    // Tue
-    [{ instructor: "MFH", room: "301", period: 7 }],
-    // Wed
-    [{ instructor: "MFH", room: "Nanotechnology Lab", period: 7 }],
   ],
   eee4163: [
     // Sat
@@ -319,20 +341,106 @@ const electiveClasses: Record<Elective1 | Elective2, ElectiveClass[][]> = {
     // Tue
     [{ instructor: "MFH", room: "301", period: 7 }],
     // Wed
-    [{ instructor: "MFH", room: "Nanotechnology Lab", period: 7 }],
+    [
+      {
+        instructor: "MFH",
+        room: "Nanotechnology Lab",
+        period: 7,
+        cycle: "even",
+      },
+    ],
   ],
   eee4183: [
     // Sat
-    [{ instructor: "MFH / SK", room: "403", period: 8 }],
+    [{ instructor: "MZI", room: "301", period: 7 }],
     // Sun
-    [],
+    [
+      {
+        instructor: "MZI",
+        room: "Telecommunication Lab",
+        period: 1,
+        cycle: "even",
+      },
+    ],
     // Mon
-    [{ instructor: "MFH", room: "402", period: 8 }],
+    [{ instructor: "MZI", room: "403", period: 7 }],
     // Tue
-    [{ instructor: "MFH", room: "301", period: 7 }],
+    [{ instructor: "MZI", room: "302", period: 8 }],
     // Wed
-    [{ instructor: "MFH", room: "Nanotechnology Lab", period: 7 }],
+    [],
   ],
+};
+
+const courses: Record<string, string> = {
+  "IPE 4111": "Project and Operations Management",
+  "EEE 4107": "Digital Signal Processing",
+  "EEE 4117": "Radio and TV Engineering",
+  "EEE 4141": "Power System II",
+  "EEE 4143": "High Voltage Engineering",
+  "EEE 4163": "VLSI",
+  "EEE 4165": "Processing and Fabrication",
+  "EEE 4183": "Digital Communication",
+
+  "EEE 4108": "Digital Signal Processing Sessional",
+  "EEE 4118": "Radio and TV Engineering Sessional",
+  "EEE 4142": "Power System II Sessional",
+  "EEE 4144": "High Voltage Engineering Sessional",
+  "EEE 4164": "VLSI Sessional",
+  "EEE 4166": "Processing and Fabrication Sessional",
+  "EEE 4184": "Digital Communication Sessional",
+};
+
+const instructors: Record<string, Record<string, string>> = {
+  EEE: {
+    AGK: "Prof. Dr. Muhammad Abdul Goffar Khan",
+    RIS: "Prof. Dr. Md. Rafiqul Islam Sheikh",
+    SMR: "Prof. Dr. S. M. Abdur Razzak",
+    MZI: "Prof. Dr. Md. Zahurul Islam Sarkar",
+    AKS: "Prof. Dr. Ajay Krishno Sarkar",
+    MFH: "Prof. Dr. Md. Faruk Hossain",
+    MSA: "Prof. Dr. Md. Shamim Anower",
+    MSI: "Prof. Dr. Md. Shahidul Islam",
+    MSH: "Prof. Dr. Md. Selim Hossain",
+    MR: "Prof. Dr. Md. Masud Rana",
+    MSR: "Prof. Dr. Md. Sohel Rana",
+    AK: "Prof. Dr. Abdul Khaleque",
+    SH: "Prof. Dr. Md. Samiul Habib",
+    TA: "Prof. Dr. Tanvir Ahmed",
+
+    GKM: "Dr. G.K.M. Hasanuzzaman\nAssoc. Prof.",
+
+    ASMS: "Abu Sadat Md. Sayem\nAsst. Prof.",
+    JEG: "Dr. Jishan-E-Giti\nAsst. Prof.",
+    MMR: "Md. Mamunur Rashid\nAsst. Prof.",
+    SKG: "Subrato Kumar Ghosh\nAsst. Prof.",
+    SCM: "Shadhon Chandra Mohonta\nAsst. Prof.",
+    MRI: "Md. Rashidul Islam\nAsst. Prof.",
+    SK: "Dr. Sumaiya Kabir\nAsst. Prof.",
+    KT: "Kusum Tara\nAsst. Prof.",
+    AKP: "Alok Kumar Paul\nAsst. Prof.",
+    MTH: "Md. Tarek Hossein\nAsst. Prof.",
+    MIR: "Md. Ilias Rahman\nAsst. Prof.",
+    AM: "Dr. Mohammod Abdul Motin\nAsst. Prof.",
+    MRC: "Md. Razon Chowdhury\nAsst. Prof.",
+    RAR: "Ruhul Amin Ratul\nAsst. Prof.",
+    BH: "Belal Hossain\nAsst. Prof.",
+    ABM: "Md. Abdul Malek\nAss Prof.",
+    MFM: "Md-Firoz Mahmud\nAss Prof.",
+
+    SHS: "Md. Sarwar Hosen\nLecturer",
+    MAR: "Md. Arafat Rahman\nLecturer",
+    SMH: "Sohani Munteha Hiam\nLecturer",
+    SHR: "Sunjidah Hossain\nLecturer",
+    MMH: "Md. Mahmudul Hasan\nLecturer",
+    SS: "Sarjana Shabab\nLecturer",
+    MMI: "Md. Mayenul Islam\nLecturer",
+    MNA: "Md. Nuhi-Alamin\nLecturer",
+    TSJ: "Tasneem Sarkar Joyeeta\nLecturer",
+  },
+  IPE: {
+    SA: "Sonia Akhter\nAsst. Prof.",
+    MRI: "Md. Rakibul Islam\nAsst. Prof.",
+  },
 };
 
 const studentInfo = getStudentInfo();
@@ -340,8 +448,13 @@ const studentInfo = getStudentInfo();
 if (studentInfo === undefined) {
   document.getElementById("studentInfo")!.classList.remove("hidden");
 } else {
-  for (const id of ["resetButton", "routine", "legends"])
+  for (const id of ["resetButton", "orientationNotice", "screenSizeNotice"])
     document.getElementById(id)!.classList.remove("hidden");
+  for (const [id, classes] of Object.entries({
+    routine: ["sm:table"],
+    legends: ["sm:grid"],
+  }))
+    document.getElementById(id)!.classList.add(...classes);
 
   function toMandatory(code: Elective1 | Elective2) {
     const className = `EEE ${code.slice(-4)}`;
@@ -379,14 +492,8 @@ if (studentInfo === undefined) {
     "routineBody"
   )! as HTMLTableSectionElement;
 
-  function insertCell(dayRow: HTMLTableRowElement) {
-    const cell = dayRow.insertCell();
-    cell.className = "border border-stone-300 dark:border-stone-600 px-1";
-    return cell;
-  }
-
   function insertFreePeriod(dayRow: HTMLTableRowElement, free: number) {
-    const cell = insertCell(dayRow);
+    const cell = dayRow.insertCell();
     cell.colSpan = free;
   }
 
@@ -399,27 +506,22 @@ if (studentInfo === undefined) {
 
     for (const klass of day) {
       const { course, instructor, room, period, cycle } = klass;
+      const courseTitle = courses[course] ?? "";
+      const instructorName = instructors[course.slice(0, 3)][instructor] ?? "";
 
       const advance = period - lastPeriod;
       if (advance !== 1) insertFreePeriod(dayRow, advance - 1);
 
-      const contactHours = classSpan(klass);
-      const cell = insertCell(dayRow);
+      const contactHours = classDuration(klass);
+      const cell = dayRow.insertCell();
       if (contactHours !== 1) cell.colSpan = contactHours;
       if (cycle !== undefined)
         cell.classList.add(
-          ...["to-transparent"].concat(
-            cycle === "odd"
-              ? ["bg-diag-stripe-br", "from-amber-400", "dark:from-amber-700"]
-              : [
-                  "bg-diag-stripe-bl",
-                  "from-emerald-400",
-                  "dark:from-emerald-700",
-                ]
-          )
+          ...["marked-cell", cycle === "odd" ? "mark-odd" : "mark-even"]
         );
 
-      cell.innerHTML = `${course}<br>${instructor}<br>${room}`;
+      cell.innerHTML = `<span title="${courseTitle}">${course}</span>
+<br><span title="${instructorName}">${instructor}</span><br>${room}`;
 
       lastPeriod = period + contactHours - 1;
     }

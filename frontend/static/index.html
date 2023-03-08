@@ -5,6 +5,111 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="manifest" href="manifest.json" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Routine" />
+    <meta name="apple-mobile-web-app-title" content="Routine" />
+    <meta name="msapplication-starturl" content="/" />
+
+    <!-- <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script>
+      /** @type {import('tailwindcss').Config} */
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          screens: {
+            sm: "720px",
+            md: "864px",
+            lg: "1024px",
+            xl: "1280px",
+          },
+          fontFamily: {
+            serif: ["Source Serif Pro", "serif"],
+          },
+        },
+      };
+    </script>
+    <style type="text/tailwindcss">
+      @tailwind base;
+      @tailwind components;
+      @tailwind utilities;
+
+      @layer base {
+        th,
+        td {
+          @apply table-cell;
+        }
+      }
+
+      @layer components {
+        .btn-settings {
+          @apply aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600;
+        }
+
+        .table-cell {
+          @apply border border-stone-300 px-1 dark:border-stone-600;
+        }
+
+        .marked-cell {
+          @apply striped-corner stripe-0.5 md:stripe-0.75 table-cell to-transparent;
+        }
+
+        .legend-cell {
+          @apply marked-cell rounded p-2 text-center;
+        }
+
+        .mark-odd {
+          @apply stripe-br from-amber-400 dark:from-amber-700;
+        }
+        .mark-even {
+          @apply stripe-bl from-emerald-400 dark:from-emerald-700;
+        }
+      }
+
+      @layer utilities {
+        .striped-corner {
+          background-image: linear-gradient(
+            var(--tw-stripe-angle),
+            var(--tw-gradient-from) var(--tw-stripe-width),
+            var(--tw-gradient-to) var(--tw-stripe-width)
+              calc(2 * var(--tw-stripe-width)),
+            var(--tw-gradient-from) calc(2 * var(--tw-stripe-width))
+              calc(3 * var(--tw-stripe-width)),
+            var(--tw-gradient-to) calc(3 * var(--tw-stripe-width))
+              calc(4 * var(--tw-stripe-width)),
+            var(--tw-gradient-from) calc(4 * var(--tw-stripe-width))
+              calc(5 * var(--tw-stripe-width)),
+            var(--tw-gradient-to) calc(5 * var(--tw-stripe-width))
+          );
+        }
+
+        .stripe-bl {
+          --tw-stripe-angle: 45deg;
+        }
+        .stripe-br {
+          --tw-stripe-angle: -45deg;
+        }
+
+        .stripe-0\.25 {
+          --tw-stripe-width: 0.0625rem;
+        }
+        .stripe-0\.5 {
+          --tw-stripe-width: 0.125rem;
+        }
+        .stripe-0\.75 {
+          --tw-stripe-width: 0.1875rem;
+        }
+        .stripe-1 {
+          --tw-stripe-width: 0.25rem;
+        }
+        .stripe-1\.25 {
+          --tw-stripe-width: 0.3125rem;
+        }
+      }
+    </style> -->
+
     <link href="index.css" rel="stylesheet" />
     <script>
       var onThemeButtonLoad = null;
@@ -41,21 +146,21 @@
   </head>
 
   <body
-    class="grid h-screen w-full min-w-max select-none grid-rows-[6rem_1fr_6rem] px-4 font-serif text-lg dark:bg-stone-900 dark:text-white print:px-24 lg:px-24"
+    class="grid h-screen w-full select-none grid-rows-[6rem_1fr_6rem] px-4 font-serif text-xs dark:bg-stone-900 dark:text-white print:px-24 md:text-sm lg:text-lg xl:px-24"
     onload="onThemeButtonLoad()"
   >
     <header class="relative row-start-1 my-auto py-4 text-center">
-      <div class="text-4xl font-light">Semester 4-1 Routine Visualizer</div>
-      <div class="text-lg">
-        for students of 18 series of RUET EEE only (for now, atleast)
+      <div class="text-xl font-light sm:text-2xl md:text-3xl lg:text-4xl">
+        Semester 4-1 Routine Visualizer
       </div>
+      for students of 18 series of RUET EEE only (for now, atleast)
 
       <div
-        class="absolute top-4 right-0 space-x-2 text-sm print:hidden lg:-right-20"
+        class="absolute top-4 right-0 space-x-2 text-sm print:hidden xl:-right-20"
       >
         <button
           id="resetButton"
-          class="hidden aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+          class="btn-settings hidden"
           onclick="resetStudentInfo()"
           title="Reset data"
         >
@@ -63,7 +168,7 @@
         </button>
         <button
           id="themeButton"
-          class="aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+          class="btn-settings"
           onclick="toggleTheme()"
           ondblclick="resetTheme()"
           title="Toggle theme"
@@ -73,7 +178,7 @@
 
     <form
       id="studentInfo"
-      class="row-start-2 m-auto hidden w-max"
+      class="col-start-1 row-start-2 m-auto hidden w-max select-auto text-sm sm:text-base md:text-lg"
       action="javascript:void(0);"
       onsubmit="setRoutineCookie()"
     >
@@ -81,7 +186,7 @@
         Roll:
         <input
           id="roll"
-          class="w-full rounded border border-stone-300 dark:border-stone-600 dark:bg-stone-900"
+          class="w-full rounded border border-stone-300 text-sm dark:border-stone-600 dark:bg-stone-900 sm:text-base md:text-lg"
           type="text"
           name="roll"
           minlength="7"
@@ -134,99 +239,74 @@
       </button>
     </form>
 
+    <div
+      class="col-start-1 row-start-2 grid w-full auto-rows-auto grid-cols-1 text-center text-sm sm:text-base md:text-lg"
+    >
+      <div id="orientationNotice" class="m-auto hidden landscape:hidden">
+        Routine is a bizarre thing, only to be viwed in landscape.
+        <div class="m-2 text-lg font-light sm:text-xl md:text-3xl">
+          But beware!
+        </div>
+        Rotate your device at your own peril, as there lurks monsters.
+      </div>
+      <div
+        id="screenSizeNotice"
+        class="m-auto hidden sm:hidden portrait:hidden"
+      >
+        It seems your screen is too small to fit this humongous monster of a
+        rotine in it, sorry.
+      </div>
+    </div>
+
     <table
       id="routine"
-      class="row-start-2 hidden min-w-max table-fixed border-separate rounded border border-stone-300 text-center dark:border-stone-600"
+      class="col-start-1 row-start-2 hidden min-w-max table-fixed border-separate rounded border border-stone-300 text-center dark:border-stone-600 portrait:hidden"
     >
-      <thead class="text-semibold text-base">
+      <thead
+        class="text-semibold text-[0.625rem] sm:text-xs md:text-sm lg:text-base"
+      >
         <tr>
-          <th class="w-25"></th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            8:00 - 8:50
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            8:50 - 9:40
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            9:40 - 10:30
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            10:50 - 11:40
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            11:40 - 12:30
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            12:30 - 1:20
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            2:30 - 3:20
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            3:20 - 4:10
-          </th>
-          <th class="border border-stone-300 px-1 dark:border-stone-600">
-            4:10 - 5:00
-          </th>
+          <th class="w-max border-none"></th>
+          <th>8:00 - 8:50</th>
+          <th>8:50 - 9:40</th>
+          <th>9:40 - 10:30</th>
+          <th>10:50 - 11:40</th>
+          <th>11:40 - 12:30</th>
+          <th>12:30 - 1:20</th>
+          <th>2:30 - 3:20</th>
+          <th>3:20 - 4:10</th>
+          <th>4:10 - 5:00</th>
         </tr>
       </thead>
       <tbody id="routineBody">
-        <tr id="dayA">
-          <td
-            class="border border-stone-300 px-1 text-right dark:border-stone-600"
-          >
-            Saturday
-          </td>
+        <tr>
+          <td class="text-right">Saturday</td>
         </tr>
-        <tr id="dayB">
-          <td
-            class="border border-stone-300 px-1 text-right dark:border-stone-600"
-          >
-            Sunday
-          </td>
+        <tr>
+          <td class="text-right">Sunday</td>
         </tr>
-        <tr id="dayC">
-          <td
-            class="border border-stone-300 px-1 text-right dark:border-stone-600"
-          >
-            Monday
-          </td>
+        <tr>
+          <td class="text-right">Monday</td>
         </tr>
-        <tr id="dayD">
-          <td
-            class="border border-stone-300 px-1 text-right dark:border-stone-600"
-          >
-            Tuesday
-          </td>
+        <tr>
+          <td class="text-right">Tuesday</td>
         </tr>
-        <tr id="dayE">
-          <td
-            class="border border-stone-300 px-1 text-right dark:border-stone-600"
-          >
-            Wednesday
-          </td>
+        <tr>
+          <td class="text-right">Wednesday</td>
         </tr>
       </tbody>
     </table>
 
     <div
       id="legends"
-      class="col-start-1 row-start-3 mb-auto grid hidden grid-cols-5 pt-2 text-sm"
+      class="col-start-1 row-start-3 mb-auto hidden grid-cols-5 pt-2 text-[0.625rem] sm:text-xs md:text-sm lg:text-base portrait:hidden"
     >
-      <div
-        class="col-start-2 rounded border border-stone-300 bg-diag-stripe-br from-amber-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-amber-700"
-      >
-        Odd cycles only
-      </div>
-      <div
-        class="col-start-4 rounded border border-stone-300 bg-diag-stripe-bl from-emerald-400 to-transparent p-2 text-center dark:border-stone-600 dark:from-emerald-700"
-      >
-        Even cycles only
-      </div>
+      <div class="legend-cell mark-odd col-start-2">Odd cycles only</div>
+      <div class="legend-cell mark-even col-start-4">Even cycles only</div>
     </div>
 
     <footer
-      class="col-start-1 row-start-3 mt-auto pb-4 text-center text-base font-light"
+      class="col-start-1 row-start-3 mt-auto pb-4 text-center text-[0.625rem] font-light sm:text-xs md:text-sm lg:text-base"
     >
       Made with utter contempt and disgust by
       <a

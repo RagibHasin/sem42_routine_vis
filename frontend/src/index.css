@@ -1,3 +1,76 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  th,
+  td {
+    @apply table-cell;
+  }
+}
+
+@layer components {
+  .btn-settings {
+    @apply aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600;
+  }
+
+  .table-cell {
+    @apply border border-stone-300 px-1 dark:border-stone-600;
+  }
+
+  .marked-cell {
+    @apply striped-corner stripe-0.5 md:stripe-0.75 table-cell to-transparent;
+  }
+
+  .legend-cell {
+    @apply marked-cell rounded p-2 text-center;
+  }
+
+  .mark-odd {
+    @apply stripe-br from-amber-400 dark:from-amber-700;
+  }
+  .mark-even {
+    @apply stripe-bl from-emerald-400 dark:from-emerald-700;
+  }
+}
+
+@layer utilities {
+  .striped-corner {
+    background-image: linear-gradient(
+      var(--tw-stripe-angle),
+      var(--tw-gradient-from) var(--tw-stripe-width),
+      var(--tw-gradient-to) var(--tw-stripe-width)
+        calc(2 * var(--tw-stripe-width)),
+      var(--tw-gradient-from) calc(2 * var(--tw-stripe-width))
+        calc(3 * var(--tw-stripe-width)),
+      var(--tw-gradient-to) calc(3 * var(--tw-stripe-width))
+        calc(4 * var(--tw-stripe-width)),
+      var(--tw-gradient-from) calc(4 * var(--tw-stripe-width))
+        calc(5 * var(--tw-stripe-width)),
+      var(--tw-gradient-to) calc(5 * var(--tw-stripe-width))
+    );
+  }
+
+  .stripe-bl {
+    --tw-stripe-angle: 45deg;
+  }
+  .stripe-br {
+    --tw-stripe-angle: -45deg;
+  }
+
+  .stripe-0\.25 {
+    --tw-stripe-width: 0.0625rem;
+  }
+  .stripe-0\.5 {
+    --tw-stripe-width: 0.125rem;
+  }
+  .stripe-0\.75 {
+    --tw-stripe-width: 0.1875rem;
+  }
+  .stripe-1 {
+    --tw-stripe-width: 0.25rem;
+  }
+  .stripe-1\.25 {
+    --tw-stripe-width: 0.3125rem;
+  }
+}
