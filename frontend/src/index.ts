@@ -2,9 +2,16 @@
  * All rights reserved (C) 2023 Muhammad Ragib Hasin
  */
 
-type Elective1 = "eee4141" | "eee4165";
+enum Elective1 {
+  "eee4141" = "eee4141",
+  "eee4165" = "eee4165",
+}
 
-type Elective2 = "eee4143" | "eee4163" | "eee4183";
+enum Elective2 {
+  "eee4143" = "eee4143",
+  "eee4163" = "eee4163",
+  "eee4183" = "eee4183",
+}
 
 type StudentInfo = {
   roll: string;
@@ -35,7 +42,20 @@ type MandatoryClass = ElectiveClass & {
   course: string;
 };
 
-function setRoutineCookie() {
+function isValidStudentInfo(student: StudentInfo): boolean {
+  return (
+    student.roll.length === 7 &&
+    student.roll.slice(0, 4) === "1801" &&
+    (() => {
+      const roll = Number.parseInt(student.roll.slice(-3));
+      return roll > 0 && roll <= 180;
+    })() &&
+    Object.values<string>(Elective1).includes(student.elective1 as string) &&
+    Object.values<string>(Elective2).includes(student.elective2 as string)
+  );
+}
+
+function submitStudentInfo() {
   const studentInfo = {
     roll: (document.getElementById("roll")! as HTMLInputElement).value,
     elective1: (
@@ -48,7 +68,12 @@ function setRoutineCookie() {
         'input[name="elective2"]:checked'
       ) as HTMLInputElement
     ).value,
-  };
+  } as StudentInfo;
+
+  if (!isValidStudentInfo(studentInfo)) {
+    document.getElementById("roll")!.focus();
+    return;
+  }
 
   const cookie = `studentInfo=${JSON.stringify(
     studentInfo
@@ -59,9 +84,10 @@ function setRoutineCookie() {
   window.location.reload();
 }
 
+const EMPTY_COOKIE = "studentInfo=;expires=1 Sep 2023 00:00:00 UTC+6";
+
 function resetStudentInfo() {
-  const cookie = "studentInfo=;expires=1 Sep 2023 00:00:00 UTC+6";
-  document.cookie = cookie;
+  document.cookie = EMPTY_COOKIE;
   window.location.reload();
 }
 
@@ -82,17 +108,20 @@ function getCookie(cname: string) {
 }
 
 function getStudentInfo(): StudentInfoEx | undefined {
-  const _studentInfo = getCookie("studentInfo");
-  const studentInfo =
-    _studentInfo != "" ? (JSON.parse(_studentInfo) as StudentInfo) : undefined;
+  const cookie = getCookie("studentInfo");
+  const student =
+    cookie != "" ? (JSON.parse(cookie) as StudentInfo) : undefined;
 
-  if (studentInfo === undefined) return undefined;
+  if (student === undefined || !isValidStudentInfo(student)) {
+    document.cookie = EMPTY_COOKIE;
+    return undefined;
+  }
 
-  const rollInSeries = Number.parseInt(studentInfo.roll.slice(-3));
+  const rollInSeries = Number.parseInt(student.roll.slice(-3));
   const section = rollInSeries <= 60 ? "A" : rollInSeries <= 120 ? "B" : "C";
   const thirty = (rollInSeries + 1) % 60 <= 31 ? 1 : 2;
 
-  return { rollInSeries, section, thirty, ...studentInfo };
+  return { rollInSeries, section, thirty, ...student };
 }
 
 function isClassApplicable(klass: ElectiveClass, student: StudentInfoEx) {
@@ -407,54 +436,55 @@ const instructors: Record<string, Record<string, string>> = {
     SH: "Prof. Dr. Md. Samiul Habib",
     TA: "Prof. Dr. Tanvir Ahmed",
 
-    GKM: "Dr. G.K.M. Hasanuzzaman\nAssoc. Prof.",
+    GKM: "Dr. G.K.M. Hasanuzzaman<br>Associate Professor",
 
-    ASMS: "Abu Sadat Md. Sayem\nAsst. Prof.",
-    JEG: "Dr. Jishan-E-Giti\nAsst. Prof.",
-    MMR: "Md. Mamunur Rashid\nAsst. Prof.",
-    SKG: "Subrato Kumar Ghosh\nAsst. Prof.",
-    SCM: "Shadhon Chandra Mohonta\nAsst. Prof.",
-    MRI: "Md. Rashidul Islam\nAsst. Prof.",
-    SK: "Dr. Sumaiya Kabir\nAsst. Prof.",
-    KT: "Kusum Tara\nAsst. Prof.",
-    AKP: "Alok Kumar Paul\nAsst. Prof.",
-    MTH: "Md. Tarek Hossein\nAsst. Prof.",
-    MIR: "Md. Ilias Rahman\nAsst. Prof.",
-    AM: "Dr. Mohammod Abdul Motin\nAsst. Prof.",
-    MRC: "Md. Razon Chowdhury\nAsst. Prof.",
-    RAR: "Ruhul Amin Ratul\nAsst. Prof.",
-    BH: "Belal Hossain\nAsst. Prof.",
-    ABM: "Md. Abdul Malek\nAss Prof.",
-    MFM: "Md-Firoz Mahmud\nAss Prof.",
+    ASMS: "Abu Sadat Md. Sayem<br>Assistant Professor",
+    JEG: "Dr. Jishan-E-Giti<br>Assistant Professor",
+    MMR: "Md. Mamunur Rashid<br>Assistant Professor",
+    SKG: "Subrato Kumar Ghosh<br>Assistant Professor",
+    SCM: "Shadhon Chandra Mohonta<br>Assistant Professor",
+    MRI: "Md. Rashidul Islam<br>Assistant Professor",
+    SK: "Dr. Sumaiya Kabir<br>Assistant Professor",
+    KT: "Kusum Tara<br>Assistant Professor",
+    AKP: "Alok Kumar Paul<br>Assistant Professor",
+    MTH: "Md. Tarek Hossein<br>Assistant Professor",
+    MIR: "Md. Ilias Rahman<br>Assistant Professor",
+    AM: "Dr. Mohammod Abdul Motin<br>Assistant Professor",
+    MRC: "Md. Razon Chowdhury<br>Assistant Professor",
+    RAR: "Ruhul Amin Ratul<br>Assistant Professor",
+    BH: "Belal Hossain<br>Assistant Professor",
+    ABM: "Md. Abdul Malek<br>Assistant Professor",
+    MFM: "Md. Firoz Mahmud<br>Assistant Professor",
 
-    SHS: "Md. Sarwar Hosen\nLecturer",
-    MAR: "Md. Arafat Rahman\nLecturer",
-    SMH: "Sohani Munteha Hiam\nLecturer",
-    SHR: "Sunjidah Hossain\nLecturer",
-    MMH: "Md. Mahmudul Hasan\nLecturer",
-    SS: "Sarjana Shabab\nLecturer",
-    MMI: "Md. Mayenul Islam\nLecturer",
-    MNA: "Md. Nuhi-Alamin\nLecturer",
-    TSJ: "Tasneem Sarkar Joyeeta\nLecturer",
+    SHS: "Md. Sarwar Hosen<br>Lecturer",
+    MAR: "Md. Arafat Rahman<br>Lecturer",
+    SMH: "Sohani Munteha Hiam<br>Lecturer",
+    SHR: "Sunjidah Hossain<br>Lecturer",
+    MMH: "Md. Mahmudul Hasan<br>Lecturer",
+    SS: "Sarjana Shabab<br>Lecturer",
+    MMI: "Md. Mayenul Islam<br>Lecturer",
+    MNA: "Md. Nuhi-Alamin<br>Lecturer",
+    TSJ: "Tasneem Sarkar Joyeeta<br>Lecturer",
   },
   IPE: {
-    SA: "Sonia Akhter\nAsst. Prof.",
-    MRI: "Md. Rakibul Islam\nAsst. Prof.",
+    SA: "Sonia Akhter<br>Assistant Professor",
+    MRI: "Md. Rakibul Islam<br>Assistant Professor",
   },
 };
 
 const studentInfo = getStudentInfo();
 
 if (studentInfo === undefined) {
-  document.getElementById("studentInfo")!.classList.remove("hidden");
-} else {
-  for (const id of ["resetButton", "orientationNotice", "screenSizeNotice"])
+  for (const id of ["studentInfo", "headerGeneric"])
     document.getElementById(id)!.classList.remove("hidden");
-  for (const [id, classes] of Object.entries({
-    routine: ["sm:table"],
-    legends: ["sm:grid"],
-  }))
-    document.getElementById(id)!.classList.add(...classes);
+} else {
+  const studentName = getCookie("studentName");
+  document.getElementById("studentName")!.innerText =
+    studentName !== "" ? studentName : studentInfo.roll;
+
+  document.getElementById("electiveNames")!.innerText =
+    `EEE ${studentInfo.elective1.slice(-4)} and ` +
+    `EEE ${studentInfo.elective2.slice(-4)}`;
 
   function toMandatory(code: Elective1 | Elective2) {
     const className = `EEE ${code.slice(-4)}`;
@@ -507,7 +537,6 @@ if (studentInfo === undefined) {
     for (const klass of day) {
       const { course, instructor, room, period, cycle } = klass;
       const courseTitle = courses[course] ?? "";
-      const instructorName = instructors[course.slice(0, 3)][instructor] ?? "";
 
       const advance = period - lastPeriod;
       if (advance !== 1) insertFreePeriod(dayRow, advance - 1);
@@ -520,12 +549,47 @@ if (studentInfo === undefined) {
           ...["marked-cell", cycle === "odd" ? "mark-odd" : "mark-even"]
         );
 
-      cell.innerHTML = `<span title="${courseTitle}">${course}</span>
-<br><span title="${instructorName}">${instructor}</span><br>${room}`;
+      const instructorHtml = instructor
+        .split(" / ")
+        .map((instructor) => {
+          const instructorName = instructors[course.slice(0, 3)][instructor];
+          return instructorName === undefined
+            ? instructor
+            : `
+<div class="group tooltip-target">
+  ${instructor}
+  <div class="group-hover:animate-conjure-vanish tooltip">${instructorName}</div>
+</div>`;
+        })
+        .join(" / ");
+
+      cell.innerHTML = `
+<div class="group tooltip-target">
+  ${course}
+  <div class="group-hover:animate-conjure-vanish tooltip">${courseTitle}</div>
+</div>
+<br>
+${instructorHtml}
+<br>
+${room}`;
 
       lastPeriod = period + contactHours - 1;
     }
   }
+
+  for (const id of [
+    "resetButton",
+    "orientationNotice",
+    "screenSizeNotice",
+    "headerPersonal",
+  ])
+    document.getElementById(id)!.classList.remove("hidden");
+
+  for (const [id, classes] of Object.entries({
+    routine: ["sm:table"],
+    legends: ["sm:grid"],
+  }))
+    document.getElementById(id)!.classList.add(...classes);
 }
 
 declare function updateTheme(): void;

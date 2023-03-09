@@ -17,13 +17,11 @@
   .table-cell {
     @apply border border-stone-300 px-1 dark:border-stone-600;
   }
-
   .marked-cell {
-    @apply striped-corner stripe-0.5 md:stripe-0.75 table-cell to-transparent;
+    @apply striped-corner stripe-0.5 md:stripe-0.75 to-transparent;
   }
-
   .legend-cell {
-    @apply marked-cell rounded p-2 text-center;
+    @apply marked-cell table-cell rounded p-2 text-center;
   }
 
   .mark-odd {
@@ -31,6 +29,13 @@
   }
   .mark-even {
     @apply stripe-bl from-emerald-400 dark:from-emerald-700;
+  }
+
+  .tooltip-target {
+    @apply relative inline-flex flex-col items-center;
+  }
+  .tooltip {
+    @apply absolute top-0 z-10 hidden w-full min-w-max rounded border border-stone-300 bg-white/20 px-1 text-center backdrop-blur dark:border-stone-600  dark:bg-stone-900/20;
   }
 }
 
@@ -58,19 +63,32 @@
     --tw-stripe-angle: -45deg;
   }
 
-  .stripe-0\.25 {
-    --tw-stripe-width: 0.0625rem;
-  }
   .stripe-0\.5 {
     --tw-stripe-width: 0.125rem;
   }
   .stripe-0\.75 {
     --tw-stripe-width: 0.1875rem;
   }
-  .stripe-1 {
-    --tw-stripe-width: 0.25rem;
+
+  .animate-conjure-vanish {
+    @apply block opacity-0;
+    animation: conjure 0.3s ease, cruciate 1.2s linear 0.3s,
+      reverse conjure 0.3s ease-out 1.5s;
   }
-  .stripe-1\.25 {
-    --tw-stripe-width: 0.3125rem;
+}
+
+@keyframes cruciate {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes conjure {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

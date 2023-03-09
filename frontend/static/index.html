@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Semester 4-1 Routine Visualizer</title>
+    <title>Semester 4-1 Class Routine</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -51,13 +51,11 @@
         .table-cell {
           @apply border border-stone-300 px-1 dark:border-stone-600;
         }
-
         .marked-cell {
-          @apply striped-corner stripe-0.5 md:stripe-0.75 table-cell to-transparent;
+          @apply striped-corner stripe-0.5 md:stripe-0.75 to-transparent;
         }
-
         .legend-cell {
-          @apply marked-cell rounded p-2 text-center;
+          @apply marked-cell table-cell rounded p-2 text-center;
         }
 
         .mark-odd {
@@ -65,6 +63,13 @@
         }
         .mark-even {
           @apply stripe-bl from-emerald-400 dark:from-emerald-700;
+        }
+
+        .tooltip-target {
+          @apply relative inline-flex flex-col items-center;
+        }
+        .tooltip {
+          @apply absolute top-0 z-10 hidden w-full min-w-max rounded border border-stone-300 bg-white/20 px-1 text-center backdrop-blur dark:border-stone-600  dark:bg-stone-900/20;
         }
       }
 
@@ -92,20 +97,33 @@
           --tw-stripe-angle: -45deg;
         }
 
-        .stripe-0\.25 {
-          --tw-stripe-width: 0.0625rem;
-        }
         .stripe-0\.5 {
           --tw-stripe-width: 0.125rem;
         }
         .stripe-0\.75 {
           --tw-stripe-width: 0.1875rem;
         }
-        .stripe-1 {
-          --tw-stripe-width: 0.25rem;
+
+        .animate-conjure-vanish {
+          @apply block opacity-0;
+          animation: conjure 0.3s ease, cruciate 1.2s linear 0.3s,
+            reverse conjure 0.3s ease-out 1.5s;
         }
-        .stripe-1\.25 {
-          --tw-stripe-width: 0.3125rem;
+      }
+
+      @keyframes cruciate {
+        from,
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes conjure {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
         }
       }
     </style> -->
@@ -150,10 +168,23 @@
     onload="onThemeButtonLoad()"
   >
     <header class="relative row-start-1 my-auto py-4 text-center">
-      <div class="text-xl font-light sm:text-2xl md:text-3xl lg:text-4xl">
-        Semester 4-1 Routine Visualizer
+      <div id="headerGeneric" class="hidden">
+        <div class="text-xl font-light sm:text-2xl md:text-3xl lg:text-4xl">
+          Semester 4-1 Class Routine Visualizer
+        </div>
+        for students of 18 series of RUET EEE only (for now, atleast)
       </div>
-      for students of 18 series of RUET EEE only (for now, atleast)
+      <div id="headerPersonal" class="hidden">
+        <div class="text-lg font-light sm:text-xl md:text-2xl lg:text-3xl">
+          Semester 4-1 Class Routine
+        </div>
+        for
+        <span
+          id="studentName"
+          class="text-sm font-light sm:text-base md:text-lg lg:text-xl"
+        ></span>
+        with <span id="electiveNames"></span>
+      </div>
 
       <div
         class="absolute top-4 right-0 space-x-2 text-sm print:hidden xl:-right-20"
@@ -176,11 +207,30 @@
       </div>
     </header>
 
+    <div
+      class="col-start-1 row-start-2 grid w-full auto-rows-auto grid-cols-1 text-center text-sm sm:text-base md:text-lg"
+    >
+      <div id="orientationNotice" class="m-auto hidden landscape:hidden">
+        Routine is a bizarre thing, only to be viwed in landscape.
+        <div class="m-2 text-lg font-light sm:text-xl md:text-3xl">
+          But beware!
+        </div>
+        Rotate your device at your own peril, as there lurks monsters.
+      </div>
+      <div
+        id="screenSizeNotice"
+        class="m-auto hidden sm:hidden portrait:hidden"
+      >
+        It seems your screen is too small to fit this humongous monster of a
+        rotine in it, sorry.
+      </div>
+    </div>
+
     <form
       id="studentInfo"
-      class="col-start-1 row-start-2 m-auto hidden w-max select-auto text-sm sm:text-base md:text-lg"
+      class="col-start-1 row-start-2 m-auto hidden w-max text-sm sm:text-base md:text-lg"
       action="javascript:void(0);"
-      onsubmit="setRoutineCookie()"
+      onsubmit="submitStudentInfo()"
     >
       <label class="p-4">
         Roll:
@@ -191,7 +241,9 @@
           name="roll"
           minlength="7"
           maxlength="7"
-          pattern="1801[01]\d{2}"
+          pattern="^1801(0([1-9]\d|0[1-9])|1([0-7]\d|80))$"
+          oninvalid="setCustomValidity('Have you forgotten, you roll is between 1801001 and 1801180.\nIf not, please leave, the lies madness ahead there.')"
+          oninput="setCustomValidity('')"
         />
       </label>
       <fieldset
@@ -233,30 +285,11 @@
       <br />
       <button
         class="w-full rounded border border-stone-300 p-2 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
-        onclick="setRoutineCookie()"
+        onclick="submitStudentInfo()"
       >
         Get to the routine already
       </button>
     </form>
-
-    <div
-      class="col-start-1 row-start-2 grid w-full auto-rows-auto grid-cols-1 text-center text-sm sm:text-base md:text-lg"
-    >
-      <div id="orientationNotice" class="m-auto hidden landscape:hidden">
-        Routine is a bizarre thing, only to be viwed in landscape.
-        <div class="m-2 text-lg font-light sm:text-xl md:text-3xl">
-          But beware!
-        </div>
-        Rotate your device at your own peril, as there lurks monsters.
-      </div>
-      <div
-        id="screenSizeNotice"
-        class="m-auto hidden sm:hidden portrait:hidden"
-      >
-        It seems your screen is too small to fit this humongous monster of a
-        rotine in it, sorry.
-      </div>
-    </div>
 
     <table
       id="routine"
@@ -266,7 +299,7 @@
         class="text-semibold text-[0.625rem] sm:text-xs md:text-sm lg:text-base"
       >
         <tr>
-          <th class="w-max border-none"></th>
+          <th class="w-0 border-none"></th>
           <th>8:00 - 8:50</th>
           <th>8:50 - 9:40</th>
           <th>9:40 - 10:30</th>
