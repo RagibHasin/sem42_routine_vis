@@ -556,20 +556,21 @@ if (studentInfo === undefined) {
           return instructorName === undefined
             ? instructor
             : `
-<div class="group tooltip-target">
-  ${instructor}
-  <div class="group-hover:animate-conjure-vanish tooltip">${instructorName}</div>
-</div>`;
+<span class="tooltip-target">${instructor}</span>
+<span class="tooltip">${instructorName}</span>
+`;
         })
         .join(" / ");
 
       cell.innerHTML = `
-<div class="group tooltip-target">
+<span class="tooltip-parent tooltip-target">
   ${course}
-  <div class="group-hover:animate-conjure-vanish tooltip">${courseTitle}</div>
-</div>
+  <span class="tooltip">${courseTitle}</span>
+</span>
 <br>
-${instructorHtml}
+<span class="tooltip-parent">
+  ${instructorHtml}
+</span>
 <br>
 ${room}`;
 

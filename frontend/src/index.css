@@ -31,11 +31,16 @@
     @apply stripe-bl from-emerald-400 dark:from-emerald-700;
   }
 
-  .tooltip-target {
-    @apply relative inline-flex flex-col items-center;
+  .tooltip-parent {
+    /* @apply relative inline-flex flex-col items-center; */
+    @apply relative;
   }
   .tooltip {
-    @apply absolute top-0 z-10 hidden w-full min-w-max rounded border border-stone-300 bg-white/20 px-1 text-center backdrop-blur dark:border-stone-600  dark:bg-stone-900/20;
+    @apply pointer-events-none invisible absolute -top-1 left-1/2 z-10 w-full min-w-max -translate-x-1/2 rounded border border-stone-300 bg-white/20 px-1 text-center backdrop-blur dark:border-stone-600  dark:bg-stone-900/20;
+  }
+  .tooltip-target:hover + .tooltip,
+  .tooltip-target:hover .tooltip {
+    @apply animate-conjure-vanish visible;
   }
 }
 

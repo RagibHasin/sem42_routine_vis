@@ -2,10 +2,12 @@ use axum::{
     body::{Bytes, Empty},
     extract::State,
     http::{Request, StatusCode, Uri},
-    middleware::Next,
+    middleware::{self, Next},
     response::Response,
+    routing::get,
     Router,
 };
+use rust_decimal::Decimal;
 use sqlx::{PgPool, Row};
 use sync_wrapper::SyncWrapper;
 use tap::TapFallible;
@@ -105,6 +107,93 @@ async fn cookie_logger<B>(
     Ok(response.await)
 }
 
+#[derive(Debug, serde::Serialize)]
+struct Stats {
+    total_hit: i64,
+    most_frequent_user: String,
+    unique_users: i64,
+    total_variation: i64,
+    eee4141: i64,
+    eee4165: i64,
+    eee4143: i64,
+    eee4163: i64,
+    eee4183: i64,
+}
+
+async fn stats(State(db): State<PgPool>) -> Result<axum::Json<Stats>, StatusCode> {
+    macro_rules! q {
+        ($query:expr, $emsg:literal) => {
+            sqlx::query($query)
+            .fetch_one(&db)
+            .await
+            .and_then(|r| r.try_get(0))
+            .map_err(|e| {
+                error!(%e, $emsg);
+                StatusCode::INTERNAL_SERVER_ERROR
+            })
+        };
+    }
+
+    let total_hit: Decimal = q!(
+        "select sum(count) from students",
+        "failed to fetch no.o total hit"
+    )?;
+
+    let most_frequent_user = q!(
+        r"select roll from students
+        where roll != '       ' and roll != '1801000' and roll != '1801061'
+        order by count desc",
+        "failed to fetch the most frequent user"
+    )?;
+
+    let unique_users = q!(
+        "select count(distinct roll) from students where roll != '       ' and roll != '1801000'",
+        "failed to fetch no.o unique users"
+    )?;
+
+    let total_variation = q!(
+        "select count(*) from students",
+        "failed to fetch no.o total variation"
+    )?;
+
+    let eee4141 = q!(
+        "select count(*) from students where elective1 = 'eee4141'",
+        "failed to fetch no.o eee4141 students"
+    )?;
+
+    let eee4165 = q!(
+        "select count(*) from students where elective1 = 'eee4165'",
+        "failed to fetch no.o eee4165 students"
+    )?;
+
+    let eee4143 = q!(
+        "select count(*) from students where elective2 = 'eee4143'",
+        "failed to fetch no.o eee4143 students"
+    )?;
+
+    let eee4163 = q!(
+        "select count(*) from students where elective2 = 'eee4163'",
+        "failed to fetch no.o eee4163 students"
+    )?;
+
+    let eee4183 = q!(
+        "select count(*) from students where elective2 = 'eee4183'",
+        "failed to fetch no.o eee4183 students"
+    )?;
+
+    Ok(axum::Json(Stats {
+        total_hit: total_hit.try_into().unwrap(),
+        most_frequent_user,
+        unique_users,
+        total_variation,
+        eee4141,
+        eee4165,
+        eee4143,
+        eee4163,
+        eee4183,
+    }))
+}
+
 #[shuttle_service::main]
 async fn main(
     #[shuttle_shared_db::Postgres] db: PgPool,
@@ -112,7 +201,8 @@ async fn main(
 ) -> shuttle_service::ShuttleAxum {
     if let Err(e) = sqlx::query(
         r#"create table if not exists students (
-    roll char(7) primary key,
+    id serial primary key,
+    roll char(7) not null,
     elective1 char(7) not null,
     elective2 char(7) not null,
     count bigint default 1
@@ -121,8 +211,8 @@ async fn main(
     .execute(&db)
     .await
     {
-        error!(%e, "failed to ensure student table");
-        panic!("failed to ensure student table: {e:?}");
+        error!(%e, "failed to ensure `students` table");
+        panic!("failed to ensure `students` table: {e:?}");
     }
 
     let router = Router::new()
@@ -131,10 +221,11 @@ async fn main(
             ServeDir::new(public_folder)
                 .fallback(Redirect::<Empty<Bytes>>::permanent(Uri::from_static("/"))),
         )
+        .nest_service("/stats", get(stats).with_state(db.clone()))
         .layer(
             ServiceBuilder::new()
                 .layer(CookieManagerLayer::new())
-                .layer(axum::middleware::from_fn_with_state(db, cookie_logger)),
+                .layer(middleware::from_fn_with_state(db, cookie_logger)),
         );
 
     Ok(SyncWrapper::new(router))
