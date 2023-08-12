@@ -9,7 +9,6 @@ use axum::{
 };
 use rust_decimal::Decimal;
 use sqlx::{PgPool, Row};
-use sync_wrapper::SyncWrapper;
 use tap::TapFallible;
 use tower::ServiceBuilder;
 use tower_cookies::{Cookie, CookieManagerLayer, Cookies};
@@ -194,11 +193,11 @@ async fn stats(State(db): State<PgPool>) -> Result<axum::Json<Stats>, StatusCode
     }))
 }
 
-#[shuttle_service::main]
-async fn main(
+#[shuttle_runtime::main]
+async fn init(
     #[shuttle_shared_db::Postgres] db: PgPool,
     #[shuttle_static_folder::StaticFolder(folder = "public")] public_folder: std::path::PathBuf,
-) -> shuttle_service::ShuttleAxum {
+) -> shuttle_axum::ShuttleAxum {
     if let Err(e) = sqlx::query(
         r#"create table if not exists students (
     id serial primary key,
@@ -228,5 +227,5 @@ async fn main(
                 .layer(middleware::from_fn_with_state(db, cookie_logger)),
         );
 
-    Ok(SyncWrapper::new(router))
+    Ok(router.into())
 }
