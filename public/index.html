@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <title>Semester 4-1 Class Routine</title>
+    <title>Semester 4-2 Class Routine</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -12,123 +12,8 @@
     <meta name="application-name" content="Routine" />
     <meta name="apple-mobile-web-app-title" content="Routine" />
     <meta name="msapplication-starturl" content="/" />
-
-    <!-- <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <script>
-      /** @type {import('tailwindcss').Config} */
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          screens: {
-            sm: "720px",
-            md: "864px",
-            lg: "1024px",
-            xl: "1280px",
-          },
-          fontFamily: {
-            serif: ["Source Serif Pro", "serif"],
-          },
-        },
-      };
-    </script>
-    <style type="text/tailwindcss">
-      @tailwind base;
-      @tailwind components;
-      @tailwind utilities;
-
-      @layer base {
-        th,
-        td {
-          @apply table-cell;
-        }
-      }
-
-      @layer components {
-        .btn-settings {
-          @apply aspect-square rounded-full border border-stone-300 p-1 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600;
-        }
-
-        .table-cell {
-          @apply border border-stone-300 px-1 dark:border-stone-600;
-        }
-        .marked-cell {
-          @apply striped-corner stripe-0.5 md:stripe-0.75 to-transparent;
-        }
-        .legend-cell {
-          @apply marked-cell table-cell rounded p-2 text-center;
-        }
-
-        .mark-odd {
-          @apply stripe-br from-amber-400 dark:from-amber-700;
-        }
-        .mark-even {
-          @apply stripe-bl from-emerald-400 dark:from-emerald-700;
-        }
-
-        .tooltip-target {
-          @apply relative inline-flex flex-col items-center;
-        }
-        .tooltip {
-          @apply absolute top-0 z-10 hidden w-full min-w-max rounded border border-stone-300 bg-white/20 px-1 text-center backdrop-blur dark:border-stone-600  dark:bg-stone-900/20;
-        }
-      }
-
-      @layer utilities {
-        .striped-corner {
-          background-image: linear-gradient(
-            var(--tw-stripe-angle),
-            var(--tw-gradient-from) var(--tw-stripe-width),
-            var(--tw-gradient-to) var(--tw-stripe-width)
-              calc(2 * var(--tw-stripe-width)),
-            var(--tw-gradient-from) calc(2 * var(--tw-stripe-width))
-              calc(3 * var(--tw-stripe-width)),
-            var(--tw-gradient-to) calc(3 * var(--tw-stripe-width))
-              calc(4 * var(--tw-stripe-width)),
-            var(--tw-gradient-from) calc(4 * var(--tw-stripe-width))
-              calc(5 * var(--tw-stripe-width)),
-            var(--tw-gradient-to) calc(5 * var(--tw-stripe-width))
-          );
-        }
-
-        .stripe-bl {
-          --tw-stripe-angle: 45deg;
-        }
-        .stripe-br {
-          --tw-stripe-angle: -45deg;
-        }
-
-        .stripe-0\.5 {
-          --tw-stripe-width: 0.125rem;
-        }
-        .stripe-0\.75 {
-          --tw-stripe-width: 0.1875rem;
-        }
-
-        .animate-conjure-vanish {
-          @apply block opacity-0;
-          animation: conjure 0.3s ease, cruciate 1.2s linear 0.3s,
-            reverse conjure 0.3s ease-out 1.5s;
-        }
-      }
-
-      @keyframes cruciate {
-        from,
-        to {
-          opacity: 1;
-        }
-      }
-
-      @keyframes conjure {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-    </style> -->
-
     <link href="index.css" rel="stylesheet" />
+
     <script>
       var onThemeButtonLoad = null;
 
@@ -170,13 +55,13 @@
     <header class="relative row-start-1 my-auto py-4 text-center">
       <div id="headerGeneric" class="hidden">
         <div class="text-xl font-light sm:text-2xl md:text-3xl lg:text-4xl">
-          Semester 4-1 Class Routine Visualizer
+          Semester 4-2 Class Routine Visualizer
         </div>
         for students of 18 series of RUET EEE only (for now, atleast)
       </div>
       <div id="headerPersonal" class="hidden">
         <div class="text-lg font-light sm:text-xl md:text-2xl lg:text-3xl">
-          Semester 4-1 Class Routine
+          Semester 4-2 Class Routine
         </div>
         for
         <span
@@ -189,6 +74,14 @@
       <div
         class="absolute top-4 right-0 space-x-2 text-sm print:hidden xl:-right-20"
       >
+        <button
+          id="pdfButton"
+          class="btn-settings hidden"
+          onclick="saveAsPdf()"
+          title="Save as PDF"
+        >
+          📃
+        </button>
         <button
           id="resetButton"
           class="btn-settings hidden"
@@ -247,39 +140,45 @@
         />
       </label>
       <fieldset
-        id="elective1"
+        id="elective3"
         class="rounded border border-stone-300 p-4 dark:border-stone-600"
       >
-        <legend>Elective 1:</legend>
+        <legend>Elective 3:</legend>
         <label>
-          <input type="radio" name="elective1" value="eee4141" checked />
-          EEE 4141: Power System II
+          <input type="radio" name="elective3" value="eee4241" checked />
+          EEE 4241: Power System Protection
         </label>
         <br />
         <label>
-          <input type="radio" name="elective1" value="eee4165" />
-          EEE 4165: Processing and Fabrication Technology
+          <input type="radio" name="elective3" value="eee4261" />
+          EEE 4261: Biomedical Engineering
         </label>
       </fieldset>
       <br />
       <fieldset
-        id="elective2"
+        id="elective4"
         class="rounded border border-stone-300 p-4 dark:border-stone-600"
       >
-        <legend>Elective 2:</legend>
+        <legend>Elective 4:</legend>
         <label>
-          <input type="radio" name="elective2" value="eee4143" checked />
-          EEE 4143: High Voltage Engineering
+          <input type="radio" name="elective4" value="eee4283" checked />
+          EEE 4283: Radar and Sattelite Communication
+        </label>
+      </fieldset>
+      <br />
+      <fieldset
+        id="elective5"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 5:</legend>
+        <label>
+          <input type="radio" name="elective5" value="eee4247" checked />
+          EEE 4247: Renewable Energy
         </label>
         <br />
         <label>
-          <input type="radio" name="elective2" value="eee4163" />
-          EEE 4163: VLSI
-        </label>
-        <br />
-        <label>
-          <input type="radio" name="elective2" value="eee4183" />
-          EEE 4183: Digital Communication
+          <input type="radio" name="elective5" value="eee4269" />
+          EEE 4269: Photovoltaic System
         </label>
       </fieldset>
       <br />

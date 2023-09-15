@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    # command: python /code/manage.py runserver 0.0.0.0:8000
+    # volumes:
+    # - .:/code
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+      # - webdriver
+  db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    restart: always
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      # POSTGRES_USER: routn
+      # POSTGRES_DB: whey
+      POSTGRES_PASSWORD: pussvwrd
+  # webdriver:
+  #   # image: instrumentisto/geckodriver:latest
+  #   build:
+  #     dockerfile: Dockerfile-webdriver
+  #   restart: always
+
+volumes:
+  postgres_data:

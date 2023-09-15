@@ -1,22 +1,26 @@
-/**
+/*
  * All rights reserved (C) 2023 Muhammad Ragib Hasin
  */
 
-enum Elective1 {
-  "eee4141" = "eee4141",
-  "eee4165" = "eee4165",
+enum Elective3 {
+  "eee4241" = "eee4241",
+  "eee4261" = "eee4261",
 }
 
-enum Elective2 {
-  "eee4143" = "eee4143",
-  "eee4163" = "eee4163",
-  "eee4183" = "eee4183",
+enum Elective4 {
+  "eee4283" = "eee4283",
+}
+
+enum Elective5 {
+  "eee4247" = "eee4247",
+  "eee4269" = "eee4269",
 }
 
 type StudentInfo = {
   roll: string;
-  elective1: Elective1;
-  elective2: Elective2;
+  elective3: Elective3;
+  elective4: Elective4;
+  elective5: Elective5;
 };
 
 type Section = "A" | "B" | "C";
@@ -50,25 +54,30 @@ function isValidStudentInfo(student: StudentInfo): boolean {
       const roll = Number.parseInt(student.roll.slice(-3));
       return roll > 0 && roll <= 180;
     })() &&
-    Object.values<string>(Elective1).includes(student.elective1 as string) &&
-    Object.values<string>(Elective2).includes(student.elective2 as string)
+    Object.values<string>(Elective3).includes(student.elective3 as string) &&
+    Object.values<string>(Elective4).includes(student.elective4 as string)
   );
 }
 
 function submitStudentInfo() {
-  const studentInfo = {
+  const studentInfo: StudentInfo = {
     roll: (document.getElementById("roll")! as HTMLInputElement).value,
-    elective1: (
+    elective3: (
       document.querySelector(
-        'input[name="elective1"]:checked'
+        'input[name="elective3"]:checked'
       ) as HTMLInputElement
-    ).value,
-    elective2: (
+    ).value as Elective3,
+    elective4: (
       document.querySelector(
-        'input[name="elective2"]:checked'
+        'input[name="elective4"]:checked'
       ) as HTMLInputElement
-    ).value,
-  } as StudentInfo;
+    ).value as Elective4,
+    elective5: (
+      document.querySelector(
+        'input[name="elective5"]:checked'
+      ) as HTMLInputElement
+    ).value as Elective5,
+  };
 
   if (!isValidStudentInfo(studentInfo)) {
     document.getElementById("roll")!.focus();
@@ -77,14 +86,14 @@ function submitStudentInfo() {
 
   const cookie = `studentInfo=${JSON.stringify(
     studentInfo
-  )}; expires=1 Sep 2023 00:00:00 UTC+6`;
+  )}; expires=1 Apr 2024 00:00:00 UTC+6`;
 
   console.log(cookie);
   document.cookie = cookie;
   window.location.reload();
 }
 
-const EMPTY_COOKIE = "studentInfo=;expires=1 Sep 2023 00:00:00 UTC+6";
+const EMPTY_COOKIE = "studentInfo=;expires=1 Apr 2024 00:00:00 UTC+6";
 
 function resetStudentInfo() {
   document.cookie = EMPTY_COOKIE;
@@ -144,279 +153,243 @@ const mandatoryClasses: Record<Section, MandatoryClass[][]> = {
     [
       // Sat
       {
-        course: "EEE 4108",
-        instructor: "SCM",
-        room: "Computer Lab 1",
-        period: 1,
+        course: "EEE 4209",
+        instructor: "MRC",
+        room: "402",
+        period: 6,
       },
     ],
     [
       // Sun
       {
-        course: "EEE 4118",
-        instructor: "SHS",
-        room: "Telecommunication Lab",
+        course: "EEE 4217",
+        instructor: "JEG",
+        room: "301",
         period: 4,
+      },
+      {
+        course: "EEE 4209",
+        instructor: "MRC",
+        room: "301",
+        period: 6,
       },
     ],
     [
       // Mon
-      { course: "EEE 4117", instructor: "BH / TSJ", room: "402", period: 2 },
-      { course: "EEE 4107", instructor: "SCM", room: "402", period: 3 },
+      {
+        course: "EEE 4209",
+        instructor: "MRC",
+        room: "301",
+        period: 5,
+      },
+      {
+        course: "EEE 4200",
+        instructor: "MSR",
+        room: "301",
+        period: 8,
+        duration: 2,
+      },
     ],
     [
       // Tue
-      { course: "EEE 4107", instructor: "SCM", room: "301", period: 1 },
-      { course: "EEE 4117", instructor: "BH", room: "301", period: 2 },
-      { course: "IPE 4111", instructor: "MRI", room: "403", period: 4 },
+      { course: "EEE 4217", instructor: "JEG", room: "302", period: 3 },
+      {
+        course: "EEE 4210",
+        instructor: "MRC",
+        room: "Computer Lab 2",
+        period: 4,
+      },
     ],
     [
       // Wed
-      { course: "EEE 4107", instructor: "SCM", room: "101", period: 4 },
-      { course: "IPE 4111", instructor: "SA", room: "101", period: 5 },
-      { course: "EEE 4117", instructor: "TSJ", room: "101", period: 6 },
+      { course: "EEE 4217", instructor: "JEG", room: "302", period: 1 },
     ],
   ],
   B: [
     [
       // Sat
-      { course: "EEE 4117", instructor: "TSJ", room: "102", period: 1 },
-      { course: "IPE 4111", instructor: "MRI", room: "102", period: 2 },
-      { course: "EEE 4107", instructor: "AM", room: "102", period: 3 },
     ],
     [
       // Sun
-      { course: "IPE 4111", instructor: "SA", room: "101", period: 7 },
-      { course: "EEE 4117", instructor: "TSJ", room: "101", period: 8 },
+      { course: "EEE 4217", instructor: "MZI", room: "302", period: 1 },
+      { course: "EEE 4209", instructor: "MMI", room: "302", period: 2 },
     ],
     [
       // Mon
+      { course: "EEE 4217", instructor: "MZI / JEG", room: "302", period: 4 },
+      { course: "EEE 4209", instructor: "MMI", room: "302", period: 5 },
       {
-        course: "EEE 4108",
+        course: "EEE 4200",
         instructor: "AM",
-        room: "Computer Lab 1",
-        period: 1,
-        for: [61, 90],
-        cycle: "even",
-      },
-      {
-        course: "EEE 4108",
-        instructor: "AM",
-        room: "Computer Lab 1",
-        period: 1,
-        for: [91, 120],
-        cycle: "odd",
+        room: "302",
+        period: 8,
+        duration: 2,
       },
     ],
     [
       // Tue
-      {
-        course: "EEE 4118",
-        instructor: "TSJ",
-        room: "Telecommunication Lab",
-        period: 4,
-        for: [61, 90],
-        cycle: "odd",
-      },
-      {
-        course: "EEE 4118",
-        instructor: "TSJ",
-        room: "Telecommunication Lab",
-        period: 4,
-        for: [91, 120],
-        cycle: "even",
-      },
+      { course: "EEE 4209", instructor: "MMI", room: "302", period: 4 },
+      { course: "EEE 4217", instructor: "JEG", room: "302", period: 5 },
     ],
     [
       // Wed
-      { course: "EEE 4117", instructor: "TSJ", room: "102", period: 1 },
-      { course: "EEE 4107", instructor: "SCM", room: "102", period: 2 },
       {
-        course: "EEE 4107",
-        instructor: "AM / SCM",
-        room: "102",
-        period: 3,
+        course: "EEE 4210",
+        instructor: "MMI",
+        room: "Computer Lab 2",
+        period: 4,
       },
     ],
   ],
   C: [
     [
       // Sat
-      {
-        course: "EEE 4108",
-        instructor: "AM",
-        room: "Computer Lab 1",
-        period: 4,
-      },
     ],
     [
       // Sun
-      { course: "EEE 4117", instructor: "BH", room: "301", period: 4 },
-      { course: "IPE 4111", instructor: "MRI", room: "301", period: 5 },
-      { course: "EEE 4107", instructor: "AM", room: "301", period: 6 },
+      { course: "EEE 4209", instructor: "MRC", room: "302", period: 4 },
     ],
     [
       // Mon
-      { course: "EEE 4117", instructor: "BH", room: "301", period: 4 },
-      { course: "EEE 4107", instructor: "AM", room: "301", period: 5 },
+      {
+        course: "EEE 4217",
+        instructor: "MZI",
+        room: "402",
+        period: 8,
+        duration: 2,
+      },
     ],
     [
       // Tue
-      { course: "EEE 4107", instructor: "AM", room: "101", period: 4 },
-      { course: "EEE 4117", instructor: "BH", room: "101", period: 5 },
-      { course: "IPE 4111", instructor: "MRI", room: "101", period: 6 },
+      {
+        course: "EEE 4210",
+        instructor: "MRC",
+        room: "Computer Lab 2",
+        period: 1,
+      },
+      { course: "EEE 4217", instructor: "MZI", room: "302", period: 4 },
+      { course: "EEE 4209", instructor: "MMI", room: "302", period: 6 },
+      {
+        course: "EEE 4200",
+        instructor: "AM",
+        room: "302",
+        period: 8,
+        duration: 2,
+      },
     ],
     [
       // Wed
-      {
-        course: "EEE 4118",
-        instructor: "BH",
-        room: "Telecommunication Lab",
-        period: 4,
-      },
+      { course: "EEE 4209", instructor: "MRC / MMI", room: "402", period: 1 },
     ],
   ],
 };
 
-const electiveClasses: Record<Elective1 | Elective2, ElectiveClass[][]> = {
-  eee4141: [
+const electiveClasses: Record<
+  Elective3 | Elective4 | Elective5,
+  ElectiveClass[][]
+> = {
+  eee4241: [
     // Sat
-    [
-      { instructor: "RAR", room: "402", period: 8, duration: 2, for: [1, 82] },
-      { instructor: "ABM", room: "302", period: 8, for: [83, 180] },
-    ],
+    [{ instructor: "MRI", room: "Machine Lab", period: 7, for: [61, 120] }],
     // Sun
-    [],
+    [
+      { instructor: "RAR", room: "301", period: 7, for: [1, 90] },
+      { instructor: "RIS", room: "302", period: 7, for: [91, 180] },
+    ],
     // Mon
-    [{ instructor: "ABM", room: "102", period: 8, for: [83, 180] }],
+    [],
     // Tue
     [
-      { instructor: "RAR", room: "101", period: 7, for: [1, 82] },
-      { instructor: "ABM", room: "102", period: 7, for: [83, 180] },
+      { instructor: "RAR", room: "301", period: 7, for: [1, 90] },
+      { instructor: "RIS", room: "302", period: 7, for: [91, 180] },
     ],
     // Wed
     [
-      {
-        instructor: "RAR",
-        room: "IoT Lab",
-        period: 7,
-        for: [1, 82],
-        cycle: "odd",
-      },
-      {
-        instructor: "MMI",
-        room: "Computer Lab 2",
-        period: 7,
-        for: [83, 180],
-        cycle: "odd",
-      },
+      { instructor: "RAR", room: "301", period: 2, for: [1, 90] },
+      { instructor: "RIS", room: "302", period: 2, for: [91, 180] },
+      { instructor: "RAR", room: "Machine Lab", period: 4, for: [1, 60] },
+      { instructor: "AKP", room: "Machine Lab", period: 4, for: [121, 180] },
     ],
   ],
-  eee4143: [
+  eee4247: [
     // Sat
-    [{ instructor: "SMR", room: "302", period: 7 }],
+    [{ instructor: "MMH", room: "302", period: 4 }],
     // Sun
-    [{ instructor: "MMI", room: "Green Energy Lab", period: 1, cycle: "even" }],
-    // Mon
-    [{ instructor: "MNA", room: "402", period: 7 }],
-    // Tue
-    [{ instructor: "SMR / MNA", room: "301", period: 8 }],
-    // Wed
     [],
-  ],
-  eee4163: [
-    // Sat
-    [
-      { instructor: "SHR", room: "402", period: 7, for: [1, 60] },
-      { instructor: "SMH", room: "403", period: 7, for: [61, 180] },
-    ],
-    // Sun
-    [
-      {
-        instructor: "SMH",
-        room: "Computer Lab 1",
-        period: 1,
-        for: [1, 60],
-        cycle: "odd",
-      },
-      {
-        instructor: "SMH",
-        room: "Computer Lab 1",
-        period: 1,
-        for: [61, 180],
-        cycle: "even",
-      },
-    ],
     // Mon
-    [
-      { instructor: "SHR", room: "101", period: 7, for: [1, 60] },
-      { instructor: "SMH", room: "102", period: 7, for: [61, 180] },
-    ],
+    [{ instructor: "MMH", room: "302", period: 7 }],
     // Tue
-    [
-      { instructor: "SHR", room: "101", period: 8, for: [1, 60] },
-      { instructor: "SMH", room: "102", period: 8, for: [61, 180] },
-    ],
+    [],
+    // Wed
+    [{ instructor: "MMH", room: "302", period: 3 }],
+  ],
+  eee4261: [
+    // Sat
+    [{ instructor: "KT", room: "402", period: 5 }],
+    // Sun
+    [{ instructor: "KT", room: "402", period: 7 }],
+    // Mon
+    [{ instructor: "KT", room: "Electronics Lab", period: 1 }],
+    // Tue
+    [{ instructor: "KT", room: "402", period: 7 }],
     // Wed
     [],
   ],
-  eee4165: [
+  eee4269: [
     // Sat
-    [{ instructor: "MFH / SK", room: "403", period: 8 }],
-    // Sun
-    [],
-    // Mon
-    [{ instructor: "MFH", room: "402", period: 8 }],
-    // Tue
-    [{ instructor: "MFH", room: "301", period: 7 }],
-    // Wed
     [
-      {
-        instructor: "MFH",
-        room: "Nanotechnology Lab",
-        period: 7,
-        cycle: "even",
-      },
+      { instructor: "MFH", room: "402", period: 3, for: [91, 180] },
+      { instructor: "MFH", room: "402", period: 4, for: [1, 90] },
     ],
+    // Sun
+    [
+      { instructor: "MFH", room: "402", period: 8, for: [1, 90] },
+      { instructor: "MFH", room: "402", period: 9, for: [91, 180] },
+    ],
+    // Mon
+    [{ instructor: "MFH", room: "402", period: 7, for: [1, 90] }],
+    // Tue
+    [],
+    // Wed
+    [{ instructor: "MFH", room: "402", period: 3, for: [91, 180] }],
   ],
-  eee4183: [
+  eee4283: [
     // Sat
-    [{ instructor: "MZI", room: "301", period: 7 }],
+    [
+      { instructor: "MSH", room: "403", period: 6, for: [61, 120] },
+      { instructor: "MR", room: "302", period: 6, for: [121, 180] },
+    ],
     // Sun
     [
-      {
-        instructor: "MZI",
-        room: "Telecommunication Lab",
-        period: 1,
-        cycle: "even",
-      },
+      { instructor: "MSH", room: "302", period: 3, for: [61, 120] },
+      { instructor: "MSH", room: "301", period: 5, for: [1, 60] },
+      { instructor: "MR", room: "302", period: 5, for: [121, 180] },
     ],
     // Mon
-    [{ instructor: "MZI", room: "403", period: 7 }],
+    [{ instructor: "MSH", room: "301", period: 6, for: [1, 60] }],
     // Tue
-    [{ instructor: "MZI", room: "302", period: 8 }],
+    [
+      { instructor: "MSH", room: "302", period: 2, for: [1, 60] },
+      { instructor: "MR", room: "302", period: 5, for: [121, 180] },
+    ],
     // Wed
-    [],
+    [{ instructor: "MSH", room: "302", period: 1, for: [61, 120] }],
   ],
 };
 
 const courses: Record<string, string> = {
-  "IPE 4111": "Project and Operations Management",
-  "EEE 4107": "Digital Signal Processing",
-  "EEE 4117": "Radio and TV Engineering",
-  "EEE 4141": "Power System II",
-  "EEE 4143": "High Voltage Engineering",
-  "EEE 4163": "VLSI",
-  "EEE 4165": "Processing and Fabrication",
-  "EEE 4183": "Digital Communication",
+  "EEE 4209": "Embedded System Design",
+  "EEE 4217": "Mobile Cellular Communication",
+  "EEE 4241": "Power System Protection",
+  "EEE 4247": "Renewable Energy",
+  "EEE 4261": "Biomedical Engineering",
+  "EEE 4269": "Photovoltaic System",
+  "EEE 4283": "Radar and Sattelite Communication",
 
-  "EEE 4108": "Digital Signal Processing Sessional",
-  "EEE 4118": "Radio and TV Engineering Sessional",
-  "EEE 4142": "Power System II Sessional",
-  "EEE 4144": "High Voltage Engineering Sessional",
-  "EEE 4164": "VLSI Sessional",
-  "EEE 4166": "Processing and Fabrication Sessional",
-  "EEE 4184": "Digital Communication Sessional",
+  "EEE 4200": "Seminar",
+  "EEE 4210": "Embedded System Design Sessional",
+  "EEE 4242": "Power System Protection Sessional",
+  "EEE 4262": "Biomedical Engineering Sessional",
 };
 
 const instructors: Record<string, Record<string, string>> = {
@@ -463,12 +436,8 @@ const instructors: Record<string, Record<string, string>> = {
     MMH: "Md. Mahmudul Hasan<br>Lecturer",
     SS: "Sarjana Shabab<br>Lecturer",
     MMI: "Md. Mayenul Islam<br>Lecturer",
-    MNA: "Md. Nuhi-Alamin<br>Lecturer",
     TSJ: "Tasneem Sarkar Joyeeta<br>Lecturer",
-  },
-  IPE: {
-    SA: "Sonia Akhter<br>Assistant Professor",
-    MRI: "Md. Rakibul Islam<br>Assistant Professor",
+    MNA: "Md. Nuhi-Alamin<br>Lecturer",
   },
 };
 
@@ -483,30 +452,36 @@ if (studentInfo === undefined) {
     studentName !== "" ? studentName : studentInfo.roll;
 
   document.getElementById("electiveNames")!.innerText =
-    `EEE ${studentInfo.elective1.slice(-4)} and ` +
-    `EEE ${studentInfo.elective2.slice(-4)}`;
+    `EEE ${studentInfo.elective3.slice(-4)}, ` +
+    `EEE ${studentInfo.elective4.slice(-4)} and ` +
+    `EEE ${studentInfo.elective5.slice(-4)}`;
 
-  function toMandatory(code: Elective1 | Elective2) {
+  function toMandatory(code: Elective3 | Elective4 | Elective5) {
     const className = `EEE ${code.slice(-4)}`;
     const classNameSess = `EEE ${Number.parseInt(code.slice(-4)) + 1}`;
     return (elective: ElectiveClass) =>
       ({
         course: isSessional(elective) ? classNameSess : className,
         ...elective,
-      } as MandatoryClass);
+      }) as MandatoryClass;
   }
 
   const routine = mandatoryClasses[studentInfo.section]
     .map((mandatoryClasses, weekday) =>
       mandatoryClasses
         .concat(
-          electiveClasses[studentInfo.elective1][weekday].map(
-            toMandatory(studentInfo.elective1)
+          electiveClasses[studentInfo.elective3][weekday].map(
+            toMandatory(studentInfo.elective3)
           )
         )
         .concat(
-          electiveClasses[studentInfo.elective2][weekday].map(
-            toMandatory(studentInfo.elective2)
+          electiveClasses[studentInfo.elective4][weekday].map(
+            toMandatory(studentInfo.elective4)
+          )
+        )
+        .concat(
+          electiveClasses[studentInfo.elective5][weekday].map(
+            toMandatory(studentInfo.elective5)
           )
         )
     )
@@ -579,6 +554,7 @@ ${room}`;
   }
 
   for (const id of [
+    "pdfButton",
     "resetButton",
     "orientationNotice",
     "screenSizeNotice",

@@ -25,10 +25,10 @@
   }
 
   .mark-odd {
-    @apply stripe-br from-amber-400 dark:from-amber-700;
+    @apply mark-odd_light dark:mark-odd_dark;
   }
   .mark-even {
-    @apply stripe-bl from-emerald-400 dark:from-emerald-700;
+    @apply mark-even_light dark:mark-even_dark;
   }
 
   .tooltip-parent {
@@ -45,6 +45,19 @@
 }
 
 @layer utilities {
+  .mark-odd_light {
+    background: url(stripe_odd_light.svg) bottom right no-repeat;
+  }
+  .mark-odd_dark {
+    background: url(stripe_odd_dark.svg) bottom right no-repeat;
+  }
+  .mark-even_light {
+    background: url(stripe_even_light.svg) bottom left no-repeat;
+  }
+  .mark-even_dark {
+    background: url(stripe_even_dark.svg) bottom left no-repeat;
+  }
+
   .striped-corner {
     background-image: linear-gradient(
       var(--tw-stripe-angle),
@@ -77,7 +90,9 @@
 
   .animate-conjure-vanish {
     @apply block opacity-0;
-    animation: conjure 0.3s ease, cruciate 1.2s linear 0.3s,
+    animation:
+      conjure 0.3s ease,
+      cruciate 1.2s linear 0.3s,
       reverse conjure 0.3s ease-out 1.5s;
   }
 }
