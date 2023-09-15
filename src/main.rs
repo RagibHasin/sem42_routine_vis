@@ -26,8 +26,9 @@ async fn cookie_logger<B>(
     #[derive(Debug, serde::Deserialize)]
     struct StudentInfo<'i> {
         roll: &'i str,
-        elective1: &'i str,
-        elective2: &'i str,
+        elective3: &'i str,
+        elective4: &'i str,
+        elective5: &'i str,
     }
 
     let response = next.run(request);
@@ -40,8 +41,9 @@ async fn cookie_logger<B>(
 
         let student_info @ StudentInfo {
             roll,
-            elective1,
-            elective2,
+            elective3,
+            elective4,
+            elective5,
         } = serde_json::from_str(cookie_val).map_err(|e| {
             error!(%e, "malformed studentInfo cookie payload");
             StatusCode::INTERNAL_SERVER_ERROR
@@ -58,14 +60,20 @@ async fn cookie_logger<B>(
             return Err(StatusCode::BAD_REQUEST);
         }
 
-        if !elective1.starts_with("eee41") || !["41", "65"].contains(&&elective1[5..]) {
-            error!(?student_info, "invalid elective 1");
+        if !elective3.starts_with("eee42") || !["41", "61"].contains(&&elective3[5..]) {
+            error!(?student_info, "invalid elective 3");
             cookies.remove(cookie.into_owned());
             return Err(StatusCode::BAD_REQUEST);
         }
 
-        if !elective2.starts_with("eee41") || !["43", "63", "83"].contains(&&elective2[5..]) {
-            error!(?student_info, "invalid elective 2");
+        if elective4 != "eee4283" {
+            error!(?student_info, "invalid elective 4");
+            cookies.remove(cookie.into_owned());
+            return Err(StatusCode::BAD_REQUEST);
+        }
+
+        if !elective5.starts_with("eee42") || !["47", "69"].contains(&&elective5[5..]) {
+            error!(?student_info, "invalid elective 5");
             cookies.remove(cookie.into_owned());
             return Err(StatusCode::BAD_REQUEST);
         }
@@ -78,7 +86,7 @@ async fn cookie_logger<B>(
         );
 
         let condition =
-            format!("roll = '{roll}' and elective1 = '{elective1}' and elective2 = '{elective2}'");
+            format!("roll = '{roll}' and elective3 = '{elective3}' and elective4 = '{elective4}' and elective5 = '{elective5}'");
         let condition = condition.as_str();
 
         let update_query = sqlx::query(&format!("select count from students where {condition}"))
@@ -89,7 +97,7 @@ async fn cookie_logger<B>(
             .ok().flatten()
             .and_then(|r| r.try_get::<i64, _>(0).ok())
             .map_or_else(
-                || format!("insert into students (roll, elective1, elective2) values ('{roll}', '{elective1}', '{elective2}')"),
+                || format!("insert into students (roll, elective3, elective4, elective5) values ('{roll}', '{elective3}', '{elective4}', '{elective5}')"),
                 |hit| {
                     let hit = hit + 1;
                     debug!(?student_info, hit);
@@ -112,11 +120,11 @@ struct Stats {
     most_frequent_user: String,
     unique_users: i64,
     total_variation: i64,
-    eee4141: i64,
-    eee4165: i64,
-    eee4143: i64,
-    eee4163: i64,
-    eee4183: i64,
+    eee4241: i64,
+    eee4261: i64,
+    eee4283: i64,
+    eee4247: i64,
+    eee4269: i64,
 }
 
 async fn stats(State(db): State<PgPool>) -> Result<axum::Json<Stats>, StatusCode> {
@@ -155,29 +163,29 @@ async fn stats(State(db): State<PgPool>) -> Result<axum::Json<Stats>, StatusCode
         "failed to fetch no.o total variation"
     )?;
 
-    let eee4141 = q!(
-        "select count(*) from students where elective1 = 'eee4141'",
-        "failed to fetch no.o eee4141 students"
+    let eee4241 = q!(
+        "select count(*) from students where elective3 = 'eee4241'",
+        "failed to fetch no.o eee4241 students"
     )?;
 
-    let eee4165 = q!(
-        "select count(*) from students where elective1 = 'eee4165'",
-        "failed to fetch no.o eee4165 students"
+    let eee4261 = q!(
+        "select count(*) from students where elective3 = 'eee4261'",
+        "failed to fetch no.o eee4261 students"
     )?;
 
-    let eee4143 = q!(
-        "select count(*) from students where elective2 = 'eee4143'",
-        "failed to fetch no.o eee4143 students"
+    let eee4283 = q!(
+        "select count(*) from students where elective4 = 'eee4283'",
+        "failed to fetch no.o eee4283 students"
     )?;
 
-    let eee4163 = q!(
-        "select count(*) from students where elective2 = 'eee4163'",
-        "failed to fetch no.o eee4163 students"
+    let eee4247 = q!(
+        "select count(*) from students where elective5 = 'eee4247'",
+        "failed to fetch no.o eee4247 students"
     )?;
 
-    let eee4183 = q!(
-        "select count(*) from students where elective2 = 'eee4183'",
-        "failed to fetch no.o eee4183 students"
+    let eee4269 = q!(
+        "select count(*) from students where elective5 = 'eee4269'",
+        "failed to fetch no.o eee4269 students"
     )?;
 
     Ok(axum::Json(Stats {
@@ -185,25 +193,39 @@ async fn stats(State(db): State<PgPool>) -> Result<axum::Json<Stats>, StatusCode
         most_frequent_user,
         unique_users,
         total_variation,
-        eee4141,
-        eee4165,
-        eee4143,
-        eee4163,
-        eee4183,
+        eee4241,
+        eee4261,
+        eee4283,
+        eee4247,
+        eee4269,
     }))
 }
 
-#[shuttle_runtime::main]
-async fn init(
-    #[shuttle_shared_db::Postgres] db: PgPool,
-    #[shuttle_static_folder::StaticFolder(folder = "public")] public_folder: std::path::PathBuf,
-) -> shuttle_axum::ShuttleAxum {
+fn trace(e: &impl std::fmt::Debug) {
+    error!(?e)
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // #[shuttle_shared_db::Postgres] db: PgPool,
+    // #[shuttle_static_folder::StaticFolder(folder = "public")] public_folder: std::path::PathBuf,
+
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::DEBUG)
+        .init();
+
+    let db = sqlx::postgres::PgPoolOptions::new()
+        // .max_connections(5)
+        .connect("postgres://postgres:pussvwrd@db:5432/postgres")
+        .await?;
+
     if let Err(e) = sqlx::query(
         r#"create table if not exists students (
     id serial primary key,
     roll char(7) not null,
-    elective1 char(7) not null,
-    elective2 char(7) not null,
+    elective3 char(7) not null,
+    elective4 char(7) not null,
+    elective5 char(7) not null,
     count bigint default 1
 )"#,
     )
@@ -217,7 +239,7 @@ async fn init(
     let router = Router::new()
         .nest_service(
             "/",
-            ServeDir::new(public_folder)
+            ServeDir::new("public")
                 .fallback(Redirect::<Empty<Bytes>>::permanent(Uri::from_static("/"))),
         )
         .nest_service("/stats", get(stats).with_state(db.clone()))
@@ -227,5 +249,10 @@ async fn init(
                 .layer(middleware::from_fn_with_state(db, cookie_logger)),
         );
 
-    Ok(router.into())
+    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+        .serve(router.into_make_service())
+        .await
+        .unwrap();
+
+    Ok(())
 }
