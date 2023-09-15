@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Semester 4-2 Class Routine</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="manifest" href="manifest.json" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Routine" />
+    <meta name="apple-mobile-web-app-title" content="Routine" />
+    <meta name="msapplication-starturl" content="/" />
+    <link href="index.css" rel="stylesheet" />
+
+    <script>
+      var onThemeButtonLoad = null;
+
+      const isDarkThemeEnabled = () =>
+        (localStorage.darkTheme === "true" ||
+          window.matchMedia("(prefers-color-scheme: dark)").matches) &&
+        localStorage.darkTheme !== "false";
+
+      function updateTheme() {
+        if (isDarkThemeEnabled()) {
+          document.documentElement.classList.add("dark");
+        } else if (localStorage.darkTheme === "false") {
+          document.documentElement.classList.remove("dark");
+        }
+
+        onThemeButtonLoad?.();
+      }
+
+      updateTheme();
+
+      onThemeButtonLoad = () =>
+        (document.getElementById("themeButton").innerText = isDarkThemeEnabled()
+          ? "☀️"
+          : "🌙");
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body
+    class="grid h-screen w-full select-none grid-rows-[6rem_1fr_6rem] px-4 font-serif text-xs dark:bg-stone-900 dark:text-white print:px-24 md:text-sm lg:text-lg xl:px-24"
+    onload="onThemeButtonLoad()"
+  >
+    <header class="relative row-start-1 my-auto py-4 text-center">
+      <div id="headerGeneric" class="hidden">
+        <div class="text-xl font-light sm:text-2xl md:text-3xl lg:text-4xl">
+          Semester 4-2 Class Routine Visualizer
+        </div>
+        for students of 18 series of RUET EEE only (for now, atleast)
+      </div>
+      <div id="headerPersonal" class="hidden">
+        <div class="text-lg font-light sm:text-xl md:text-2xl lg:text-3xl">
+          Semester 4-2 Class Routine
+        </div>
+        for
+        <span
+          id="studentName"
+          class="text-sm font-light sm:text-base md:text-lg lg:text-xl"
+        ></span>
+        with <span id="electiveNames"></span>
+      </div>
+
+      <div
+        class="absolute top-4 right-0 space-x-2 text-sm print:hidden xl:-right-20"
+      >
+        <button
+          id="pdfButton"
+          class="btn-settings hidden"
+          onclick="saveAsPdf()"
+          title="Save as PDF"
+        >
+          📃
+        </button>
+        <button
+          id="resetButton"
+          class="btn-settings hidden"
+          onclick="resetStudentInfo()"
+          title="Reset data"
+        >
+          🔃
+        </button>
+        <button
+          id="themeButton"
+          class="btn-settings"
+          onclick="toggleTheme()"
+          ondblclick="resetTheme()"
+          title="Toggle theme"
+        ></button>
+      </div>
+    </header>
+
+    <div
+      class="col-start-1 row-start-2 grid w-full auto-rows-auto grid-cols-1 text-center text-sm sm:text-base md:text-lg"
+    >
+      <div id="orientationNotice" class="m-auto hidden landscape:hidden">
+        Routine is a bizarre thing, only to be viwed in landscape.
+        <div class="m-2 text-lg font-light sm:text-xl md:text-3xl">
+          But beware!
+        </div>
+        Rotate your device at your own peril, as there lurks monsters.
+      </div>
+      <div
+        id="screenSizeNotice"
+        class="m-auto hidden sm:hidden portrait:hidden"
+      >
+        It seems your screen is too small to fit this humongous monster of a
+        rotine in it, sorry.
+      </div>
+    </div>
+
+    <form
+      id="studentInfo"
+      class="col-start-1 row-start-2 m-auto hidden w-max text-sm sm:text-base md:text-lg"
+      action="javascript:void(0);"
+      onsubmit="submitStudentInfo()"
+    >
+      <label class="p-4">
+        Roll:
+        <input
+          id="roll"
+          class="w-full rounded border border-stone-300 text-sm dark:border-stone-600 dark:bg-stone-900 sm:text-base md:text-lg"
+          type="text"
+          name="roll"
+          minlength="7"
+          maxlength="7"
+          pattern="^1801(0([1-9]\d|0[1-9])|1([0-7]\d|80))$"
+          oninvalid="setCustomValidity('Have you forgotten, you roll is between 1801001 and 1801180.\nIf not, please leave, the lies madness ahead there.')"
+          oninput="setCustomValidity('')"
+        />
+      </label>
+      <fieldset
+        id="elective3"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 3:</legend>
+        <label>
+          <input type="radio" name="elective3" value="eee4241" checked />
+          EEE 4241: Power System Protection
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="elective3" value="eee4261" />
+          EEE 4261: Biomedical Engineering
+        </label>
+      </fieldset>
+      <br />
+      <fieldset
+        id="elective4"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 4:</legend>
+        <label>
+          <input type="radio" name="elective4" value="eee4283" checked />
+          EEE 4283: Radar and Sattelite Communication
+        </label>
+      </fieldset>
+      <br />
+      <fieldset
+        id="elective5"
+        class="rounded border border-stone-300 p-4 dark:border-stone-600"
+      >
+        <legend>Elective 5:</legend>
+        <label>
+          <input type="radio" name="elective5" value="eee4247" checked />
+          EEE 4247: Renewable Energy
+        </label>
+        <br />
+        <label>
+          <input type="radio" name="elective5" value="eee4269" />
+          EEE 4269: Photovoltaic System
+        </label>
+      </fieldset>
+      <br />
+      <button
+        class="w-full rounded border border-stone-300 p-2 hover:border-blue-600 dark:border-stone-600 hover:dark:border-blue-600"
+        onclick="submitStudentInfo()"
+      >
+        Get to the routine already
+      </button>
+    </form>
+
+    <table
+      id="routine"
+      class="col-start-1 row-start-2 hidden min-w-max table-fixed border-separate rounded border border-stone-300 text-center dark:border-stone-600 portrait:hidden"
+    >
+      <thead
+        class="text-semibold text-[0.625rem] sm:text-xs md:text-sm lg:text-base"
+      >
+        <tr>
+          <th class="w-0 border-none"></th>
+          <th>8:00 - 8:50</th>
+          <th>8:50 - 9:40</th>
+          <th>9:40 - 10:30</th>
+          <th>10:50 - 11:40</th>
+          <th>11:40 - 12:30</th>
+          <th>12:30 - 1:20</th>
+          <th>2:30 - 3:20</th>
+          <th>3:20 - 4:10</th>
+          <th>4:10 - 5:00</th>
+        </tr>
+      </thead>
+      <tbody id="routineBody">
+        <tr>
+          <td class="text-right">Saturday</td>
+        </tr>
+        <tr>
+          <td class="text-right">Sunday</td>
+        </tr>
+        <tr>
+          <td class="text-right">Monday</td>
+        </tr>
+        <tr>
+          <td class="text-right">Tuesday</td>
+        </tr>
+        <tr>
+          <td class="text-right">Wednesday</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div
+      id="legends"
+      class="col-start-1 row-start-3 mb-auto hidden grid-cols-5 pt-2 text-[0.625rem] sm:text-xs md:text-sm lg:text-base portrait:hidden"
+    >
+      <div class="legend-cell mark-odd col-start-2">Odd cycles only</div>
+      <div class="legend-cell mark-even col-start-4">Even cycles only</div>
+    </div>
+
+    <footer
+      class="col-start-1 row-start-3 mt-auto pb-4 text-center text-[0.625rem] font-light sm:text-xs md:text-sm lg:text-base"
+    >
+      Made with utter contempt and disgust by
+      <a
+        class="text-sky-500 dark:text-sky-400"
+        href="https://github.com/RagibHasin"
+      >
+        Muhammad Ragib Hasin</a
+      >. 😬🤢😫😑
+    </footer>
+
+    <script src="index.js"></script>
+  </body>
+</html>
