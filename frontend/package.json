@@ -5,11 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "npx tailwindcss -i ./src/index.css -o ./public/index.css --minify",
+    "build:css": "npx tailwindcss -i ./src/index.css -o ../public/index.css --minify",
     "build:ts": "tsc",
-    "build:static": "cpy static/* public",
-    "build:public": "cpy public/* ../public",
-    "build": "npm run build:css && npm run build:ts && npm run build:static && npm run build:public"
+    "build:static": "cpy static/* ../public",
+    "build": "npm run build:css && npm run build:ts && npm run build:static"
   },
   "author": "",
   "license": "ISC",

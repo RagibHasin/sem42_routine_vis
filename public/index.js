@@ -94,7 +94,7 @@ const mandatoryClasses = {
                 course: "EEE 4209",
                 instructor: "MRC",
                 room: "402",
-                period: 6,
+                period: 5,
             },
         ],
         [
@@ -140,7 +140,7 @@ const mandatoryClasses = {
         ],
         [
             // Wed
-            { course: "EEE 4217", instructor: "JEG", room: "302", period: 1 },
+            { course: "EEE 4217", instructor: "JEG", room: "301", period: 1 },
         ],
     ],
     B: [
@@ -209,7 +209,7 @@ const mandatoryClasses = {
             { course: "EEE 4209", instructor: "MMI", room: "302", period: 6 },
             {
                 course: "EEE 4200",
-                instructor: "AM",
+                instructor: "MSR",
                 room: "302",
                 period: 8,
                 duration: 2,
@@ -224,7 +224,10 @@ const mandatoryClasses = {
 const electiveClasses = {
     eee4241: [
         // Sat
-        [{ instructor: "MRI", room: "Machine Lab", period: 7, for: [61, 120] }],
+        [
+            { instructor: "MRI", room: "Machine Lab", period: 7, for: [1, 90] },
+            { instructor: "AKP", room: "Machine Lab", period: 7, for: [91, 180] },
+        ],
         // Sun
         [
             { instructor: "RAR", room: "301", period: 7, for: [1, 90] },
@@ -241,8 +244,6 @@ const electiveClasses = {
         [
             { instructor: "RAR", room: "301", period: 2, for: [1, 90] },
             { instructor: "RIS", room: "302", period: 2, for: [91, 180] },
-            { instructor: "RAR", room: "Machine Lab", period: 4, for: [1, 60] },
-            { instructor: "AKP", room: "Machine Lab", period: 4, for: [121, 180] },
         ],
     ],
     eee4247: [
@@ -259,45 +260,64 @@ const electiveClasses = {
     ],
     eee4261: [
         // Sat
-        [{ instructor: "KT", room: "402", period: 5 }],
+        [
+            { instructor: "AKS", room: "402", period: 6, for: [1, 90] },
+            { instructor: "KT", room: "403", period: 6, for: [91, 180] },
+            {
+                instructor: "AKS",
+                room: "Nanotechnology Lab",
+                period: 7,
+                for: [1, 90],
+            },
+        ],
         // Sun
-        [{ instructor: "KT", room: "402", period: 7 }],
+        [
+            { instructor: "AKS", room: "402", period: 7, for: [1, 90] },
+            { instructor: "KT", room: "403", period: 7, for: [91, 180] },
+        ],
         // Mon
-        [{ instructor: "KT", room: "Electronics Lab", period: 1 }],
+        [
+            {
+                instructor: "KT",
+                room: "Nanotechnology Lab",
+                period: 1,
+                for: [91, 180],
+            },
+        ],
         // Tue
-        [{ instructor: "KT", room: "402", period: 7 }],
+        [
+            { instructor: "AKS", room: "402", period: 7, for: [1, 90] },
+            { instructor: "KT", room: "403", period: 7, for: [91, 180] },
+        ],
         // Wed
         [],
     ],
     eee4269: [
         // Sat
-        [
-            { instructor: "MFH", room: "402", period: 3, for: [91, 180] },
-            { instructor: "MFH", room: "402", period: 4, for: [1, 90] },
-        ],
+        [{ instructor: "MFH", room: "402", period: 4 }],
         // Sun
-        [
-            { instructor: "MFH", room: "402", period: 8, for: [1, 90] },
-            { instructor: "MFH", room: "402", period: 9, for: [91, 180] },
-        ],
+        [{ instructor: "MFH", room: "402", period: 8, duration: 2 }],
         // Mon
-        [{ instructor: "MFH", room: "402", period: 7, for: [1, 90] }],
+        [{ instructor: "MFH", room: "402", period: 7 }],
         // Tue
         [],
         // Wed
-        [{ instructor: "MFH", room: "402", period: 3, for: [91, 180] }],
+        [{ instructor: "MFH", room: "402", period: 7, duration: 2 }],
     ],
     eee4283: [
         // Sat
-        [
-            { instructor: "MSH", room: "403", period: 6, for: [61, 120] },
-            { instructor: "MR", room: "302", period: 6, for: [121, 180] },
-        ],
+        [{ instructor: "MSH", room: "403", period: 5, for: [61, 120] }],
         // Sun
         [
             { instructor: "MSH", room: "302", period: 3, for: [61, 120] },
             { instructor: "MSH", room: "301", period: 5, for: [1, 60] },
-            { instructor: "MR", room: "302", period: 5, for: [121, 180] },
+            {
+                instructor: "MR",
+                room: "302",
+                period: 5,
+                duration: 2,
+                for: [121, 180],
+            },
         ],
         // Mon
         [{ instructor: "MSH", room: "301", period: 6, for: [1, 60] }],
